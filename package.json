@@ -1,0 +1,25 @@
+{
+  "name": "associate-assignment-backend",
+  "version": "1.0.0",
+  "description": "Assessment-tool",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index"
+  },
+  "author": "Divya",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "chalk": "^5.3.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "httpserver": "^0.3.0",
+    "jsonwebtoken": "^9.0.2",
+    "log4js": "^6.9.1",
+    "mongodb": "^6.7.0",
+    "pg": "^8.12.0",
+    "sessionstorage": "^0.1.0"
+  }
+}
