@@ -10,7 +10,6 @@ var sessionStorage = require('sessionstorage');
 
 var logger = log4js.getLogger();
 
-
  app.use(cors());
 sessionStorage.setItem("srcFolderPath",__dirname);
  app.use(bodyParser.json());
