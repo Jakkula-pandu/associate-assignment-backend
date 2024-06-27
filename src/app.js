@@ -1,4 +1,4 @@
-const client=require('./DBconnection')
+const client=require('./dbConnection')
 require('dotenv').config();
 const express = require('express');
 const app = express();
