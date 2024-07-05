@@ -1,4 +1,4 @@
-console.log("zzzzzzzzzzz");
+
 require("dotenv").config();
 const app = require("./src/app");
 const debug = require("debug")("credopay-api");
@@ -6,7 +6,6 @@ const http = require("http");
 const port = normalizePort(process.env.PORT || "1020");
 app.set("port", port);
 const server = http.createServer(app);
-console.log("wwwwwwwww");
 server.listen(port);
 server.on("error", onError);
 server.on("listening", onListening);

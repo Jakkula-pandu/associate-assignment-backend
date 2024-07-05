@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "Test@123",
+    "database": "assessment_tool",
+    "host": "10.0.0.200",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "postgres",
+    "password": "Test@123",
+    "database": "assessment_tool",
+    "host": "10.0.0.200",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "postgres",
+    "password": "Test@123",
+    "database": "assessment_tool",
+    "host": "10.0.0.200",
+    "dialect": "postgres"
+  }
+}
