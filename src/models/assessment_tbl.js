@@ -3,10 +3,6 @@ const { Model, DataTypes } = require("sequelize");
 module.exports = (sequelize) => {
   class Assessment extends Model {
     static associate(models) {
-    //   Assessment.belongsTo(models.Questions, {
-    //     foreignKey: "quns_id",
-    //     as: "quns id",
-    //   });
     }
   }
 
@@ -41,14 +37,6 @@ module.exports = (sequelize) => {
           key: "batch_id",
         },
       },
-    //   quns_id: {
-    //     type: DataTypes.INTEGER,
-    //     allowNull: true,
-    //     references: {
-    //       model: "Questions",
-    //       key: "questions_tbl",
-    //     },
-    //   },
     },
     {
       sequelize,

@@ -1,5 +1,5 @@
 const Joi = require("joi")
-console.log("pppppp");
+
 exports.validateUserReqBody = () => {
     return Joi.object({
         batch_name: Joi.string().required()
