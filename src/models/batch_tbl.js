@@ -28,22 +28,6 @@ module.exports = (sequelize) => {
         allowNull: true,
         defaultValue: sequelize.literal("CURRENT_TIMESTAMP"),
       },
-      // assessment_id: {
-      //   type: DataTypes.INTEGER,
-      //   allowNull: true,
-      //   references: {
-      //     model: "assessment",
-      //     key: "assessment_id",
-      //   },
-      // },
-      // user_id: {
-      //   type: DataTypes.INTEGER,
-      //   allowNull: true,
-      //   references: {
-      //     model: "User",
-      //     key: "user_id",
-      //   },
-      // },
       username: {
         type: DataTypes.JSON,
         allowNull: true,
