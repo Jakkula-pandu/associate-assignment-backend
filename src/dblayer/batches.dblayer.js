@@ -19,3 +19,35 @@ exports.insertBatch = async (data) => {
 
     }
 }
+
+exports.fetchAllBatches = async ( limit, offset, search) => {
+  try {
+    let whereCondition = {
+      [Op.and]: [],
+    };
+
+    if (search && search.length >= constants.NUMBERS.THREE) {
+      whereCondition[Op.and].push({
+        [Op.or]: [
+          { batch_name: { [Op.iLike]: `%${search}%` } },
+ 
+        ],
+      });
+    } else if (search && search.length < constants.NUMBERS.THREE) {
+      return errorHandle({ status: constants.STATUS.FALSE }, res, message);
+    }
+
+    const allBatches = await batches_tbl.findAndCountAll({
+      where: whereCondition,
+    
+      limit: limit,
+      offset: offset,
+      order: [[constants.VARIABLES.CREATED_DATE, constants.VARIABLES.DESC]],
+    });
+
+    return { status: constants.STATUS.TRUE, data: allBatches };
+  } catch (error) {
+    console.log("error",error);
+    return { status: constants.STATUS.FALSE, data: error };
+  }
+};
