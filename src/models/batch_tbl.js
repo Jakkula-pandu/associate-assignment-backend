@@ -28,7 +28,7 @@ module.exports = (sequelize) => {
         allowNull: true,
         defaultValue: sequelize.literal("CURRENT_TIMESTAMP"),
       },
-      username: {
+      user_name: {
         type: DataTypes.JSON,
         allowNull: true,
       },
