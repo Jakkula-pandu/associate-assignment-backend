@@ -44,6 +44,7 @@ module.exports = {
     500: "Internal Server Error",
     503: "Some thing went wrong",
     504: "Gateway Timeout",
+
   },
   NUMBERS: {
     ZERO: 0,
@@ -51,10 +52,17 @@ module.exports = {
     TEN: 10,
     TWO: 2,
     THREE: 3,
+    FOUR:4
+  },
+   STRING_COMPARE: {
+    NULL: 'null',
+    UNDEFINED: undefined
   },
   STRINGS: {
     NO_RECORDS: "No records found",
-    ERROR_FETCHING_USERS: "Error fetching users"
+    ERROR_FETCHING_USERS: "Error fetching users",
+    NOT_AUTHORIZED:"you are not authorized for add batches",
+    BATCH_EXIST:'Batch with this name already exists.'
   },
   VARIABLES: {
     ROLE: "role",
