@@ -3,7 +3,6 @@ const constants = require("../../constants");
 const Schema = require('./batches.validation');
 const { handleException, errorHandle, exception } = require("../../utils");
 
-
 exports.validateRequestBody = async (req, res, next) => {
     let schema = Schema.validateUserReqBody();
     let { error } = schema.validate(req.body);
@@ -21,10 +20,9 @@ exports.addBatch = async (req, res) => {
     try {
         const requestBody = req.body;
         requestBody.role_id = req.header("role_id");
-
         let insertBatch = await batchService.addBatch(requestBody);
         return res.status(200).json(insertBatch);
     } catch (e) {
-     return exception(res)
+    exception(res)
     }
 };

@@ -9,7 +9,7 @@ var log4js = require("log4js");
 var sessionStorage = require('sessionstorage');
 const cacheProvider = require('./cache/cache');
 const user = require("./controllers/users/users.router");
-const batch =  require("./controllers/batches/batches.router")
+const batch =  require("./controllers/batches/batches.router");
 const { sequelize } = require('./models'); 
 var logger = log4js.getLogger();
  app.use(cors());
@@ -22,11 +22,10 @@ models.sequelize.sync();
 cacheProvider.start((err) => {
     if (err) console.log("error while starting cache provider " + err);
 });
-
 sequelize.sync({ force: false }) 
   .then(() => {
     console.log('Database & tables created!');
   });
-app.use("/v0.1/users",user)
-app.use("/v0.1/batches",batch)
+app.use("/v0.1/users",user);
+app.use("/v0.1/batches",batch);
 module.exports = app;
