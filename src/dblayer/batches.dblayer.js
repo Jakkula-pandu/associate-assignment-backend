@@ -40,17 +40,14 @@ exports.fetchAllBatches = async ( limit, offset, search) => {
       return errorHandle({ status: constants.STATUS.FALSE }, res, message);
     }
 
-    const allBatches = await batches_tbl.findAndCountAll({
+    const allBatches = await Batch.findAndCountAll({
       where: whereCondition,
-    
       limit: limit,
       offset: offset,
       order: [[constants.VARIABLES.CREATED_DATE, constants.VARIABLES.DESC]],
     });
-
     return { status: constants.STATUS.TRUE, data: allBatches };
   } catch (error) {
-    console.log("error",error);
     return { status: constants.STATUS.FALSE, data: error };
   }
 };

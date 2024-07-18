@@ -30,16 +30,13 @@ exports.addBatch = async (req, res) => {
 exports.fetchBatch = async (req, res) => {
   try {
     const {
-     
       size = process.env.page_Size || constants.NUMBERS.TEN,
       search,
     } = req.query;
     const page = req.query.page || constants.NUMBERS.ONE;
     const result = await batchService.fetchBatches( page, size, search);
-
     if (result.status === constants.STATUS.TRUE) {
       const { count, rows } = result.data;
-
       if (rows.length > constants.NUMBERS.ZERO) {
         res.status(constants.STATUS_CODES.OK).json({
           status: constants.STATUS.TRUE,
@@ -53,7 +50,7 @@ exports.fetchBatch = async (req, res) => {
       } else {
         handleException(
           constants.STATUS_CODES.DOES_NOT_EXIST,
-          constants.MESSAGES[constants.STATUS_CODES.DOES_NOT_EXIST],
+           constants.STRINGS.NO_RECORDS,
           res
         );
         return;
@@ -63,7 +60,6 @@ exports.fetchBatch = async (req, res) => {
       return errorHandle(result.data, res, message);
     }
   } catch(e) {
-    console.log("eeeeeeee",e);
     return exception(res);
   }
 };
