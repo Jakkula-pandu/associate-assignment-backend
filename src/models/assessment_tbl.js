@@ -3,6 +3,10 @@ const { Model, DataTypes } = require("sequelize");
 module.exports = (sequelize) => {
   class Assessment extends Model {
     static associate(models) {
+      Assessment.belongsTo(models.Batch, {
+        foreignKey: "batch_id",
+        as: "role",
+      });
     }
   }
 

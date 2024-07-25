@@ -62,7 +62,8 @@ module.exports = {
     NO_RECORDS: "No records found",
     ERROR_FETCHING_USERS: "Error fetching users",
     NOT_AUTHORIZED:"you are not authorized for add batches",
-    BATCH_EXIST:'Batch with this name already exists.'
+    BATCH_EXIST:'Batch with this name already exists.',
+    ASSESSMENT_EXIST:'Assessment with this name already exists.'
   },
   VARIABLES: {
     ROLE: "role",
