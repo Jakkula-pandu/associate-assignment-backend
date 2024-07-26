@@ -43,13 +43,14 @@ exports.fetchAllUsers = async (role_id, limit, offset, search) => {
           ],
         },
       ],
-      limit: limit,
-      offset: offset,
+      limit: limit > 0 ? limit : undefined, // If limit is 0, fetch all
+      offset: offset >= 0 ? offset : undefined, // If offset is negative, fetch all
       order: [[constants.VARIABLES.CREATED_DATE, constants.VARIABLES.DESC]],
+     
     });
-
     return { status: constants.STATUS.TRUE, data: allUsers };
   } catch (error) {
     return { status: constants.STATUS.FALSE, data: error };
   }
 };
+

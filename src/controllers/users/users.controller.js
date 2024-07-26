@@ -7,13 +7,22 @@ exports.fetchUsers = async (req, res) => {
   try {
     const {
       role_id,
-      page = process.env.page || constants.NUMBERS.ONE,
+      page,
       size = process.env.page_Size || constants.NUMBERS.TEN,
       search,
     } = req.query;
 
-    const result = await userService.fetchAllUsers(role_id, page, size, search);
+    let limit, offset;
 
+    if (page && parseInt(page) > 0) {
+      limit = parseInt(size);
+      offset = (parseInt(page) - constants.NUMBERS.ONE) * limit;
+    } else {
+      limit = undefined; // When fetching all records
+      offset = undefined; // When fetching all records
+    }
+
+    const result = await userService.fetchAllUsers(role_id, limit, offset, search);
     if (result.status === constants.STATUS.TRUE) {
       const { count, rows } = result.data;
 
@@ -22,8 +31,8 @@ exports.fetchUsers = async (req, res) => {
           status: constants.STATUS.TRUE,
           code: constants.STATUS_CODES.OK,
           totalItems: count,
-          totalPages: Math.ceil(count / size),
-          currentPage: parseInt(page),
+          totalPages: limit ? Math.ceil(count / limit) : 1, // Calculate total pages based on limit
+          currentPage: limit ? parseInt(page) : 1, // Current page based on the limit
           allUsers: rows,
         });
         return;
@@ -39,7 +48,7 @@ exports.fetchUsers = async (req, res) => {
       const message = constants.STRINGS.ERROR_FETCHING_USERS;
       return errorHandle(result.data, res, message);
     }
-  } catch {
+  } catch (e) {
     return exception(res);
   }
 };
