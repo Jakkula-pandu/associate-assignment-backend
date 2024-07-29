@@ -4,7 +4,7 @@ const { all } = require("../controllers/batches/batches.router");
 const Sequelize = require('sequelize');
 const { Op } = require('sequelize');
 const { handleException, errorHandle, exception } = require("../utils");
-
+const {Training} = require('../models');
 exports.insertBatch = async (data) => {
     try {
         let existingBatch = await Batch.findAll({ where: { batch_name: data.batch_name } });
@@ -47,6 +47,36 @@ exports.fetchAllBatches = async ( limit, offset, search) => {
       order: [[constants.VARIABLES.CREATED_DATE, constants.VARIABLES.DESC]],
     });
     return { status: constants.STATUS.TRUE, data: allBatches };
+  } catch (error) {
+    return { status: constants.STATUS.FALSE, data: error };
+  }
+};
+
+
+exports.fetchAllTrainings = async (role_id, limit, offset, search) => {
+  try {
+    let whereCondition = {
+      [Op.and]: [],
+    };
+
+    if (search && search.length >= constants.NUMBERS.THREE) {
+      whereCondition[Op.and].push({
+        [Op.or]: [
+          { trainings: { [Op.iLike]: `%${search}%` } },
+        ],
+      });
+    } else if (search && search.length < constants.NUMBERS.THREE) {
+      return errorHandle({ status: constants.STATUS.FALSE }, res, message);
+    }
+
+    const allTrainings = await Training.findAndCountAll({
+      where: whereCondition,
+      limit: limit > 0 ? limit : undefined, // If limit is 0, fetch all
+      offset: offset >= 0 ? offset : undefined, // If offset is negative, fetch all
+      order: [[constants.VARIABLES.CREATED_DATE, constants.VARIABLES.DESC]],
+     
+    });
+    return { status: constants.STATUS.TRUE, data: allTrainings };
   } catch (error) {
     return { status: constants.STATUS.FALSE, data: error };
   }

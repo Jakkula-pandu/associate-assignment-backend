@@ -7,9 +7,17 @@ const {
   serviceLayerResponse,
 } = require("../../utils");
 
+// exports.fetchAllUsers = async (role_id, limit, offset, search) => {
+//   let users = await userDbLayer.fetchAllUsers(role_id, limit, offset, search);
+//   serviceLayerResponse(users);
+//   return users;
+
+// };
+
 exports.fetchAllUsers = async (role_id, limit, offset, search) => {
   let users = await userDbLayer.fetchAllUsers(role_id, limit, offset, search);
+  console.log("users",users);
   serviceLayerResponse(users);
   return users;
-
+ 
 };

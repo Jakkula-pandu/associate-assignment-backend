@@ -8,5 +8,6 @@ const userController = require('./users.controller');
  * @modify date 2024-07-03 18:30:24
  * @desc [This route fetch the users from DB ]
  */
-router.get('/fetch-users', userController.fetchUsers)
+// router.get('/fetch-users', userController.fetchUsers)
+router.get('/fetch-users', userController.fetchUsers);
 module.exports = router;

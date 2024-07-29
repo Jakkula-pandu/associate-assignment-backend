@@ -63,7 +63,8 @@ module.exports = {
     ERROR_FETCHING_USERS: "Error fetching users",
     NOT_AUTHORIZED:"you are not authorized for add batches",
     BATCH_EXIST:'Batch with this name already exists.',
-    ASSESSMENT_EXIST:'Assessment with this name already exists.'
+    ASSESSMENT_EXIST:'Assessment with this name already exists.',
+    ERROR_FETCHING_TRAININGS:"Error fetching trainings"
   },
   VARIABLES: {
     ROLE: "role",

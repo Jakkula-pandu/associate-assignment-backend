@@ -14,3 +14,11 @@ exports.fetchBatches = async ( page, size, search) => {
   serviceLayerResponse(users);
   return users;
 };
+
+exports.fetchAllTrainings = async (role_id, limit, offset, search) => {
+  let trainings = await batchDbLayer.fetchAllTrainings(role_id, limit, offset, search);
+  serviceLayerResponse(trainings);
+  return trainings;
+
+};
+

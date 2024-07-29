@@ -63,3 +63,55 @@ exports.fetchBatch = async (req, res) => {
     return exception(res);
   }
 };
+
+
+
+exports.fetchTraining = async (req, res) => {
+  try {
+    const {
+      role_id,
+      page,
+      size = process.env.page_Size || constants.NUMBERS.TEN,
+      search,
+    } = req.query;
+
+    let limit, offset;
+
+    if (page && parseInt(page) > 0) {
+      limit = parseInt(size);
+      offset = (parseInt(page) - constants.NUMBERS.ONE) * limit;
+    } else {
+      limit = undefined;
+      offset = undefined; 
+    }
+
+    const result = await batchService.fetchAllTrainings(role_id, limit, offset, search);
+    if (result.status === constants.STATUS.TRUE) {
+      const { count, rows } = result.data;
+
+      if (rows.length > constants.NUMBERS.ZERO) {
+        res.status(constants.STATUS_CODES.OK).json({
+          status: constants.STATUS.TRUE,
+          code: constants.STATUS_CODES.OK,
+          totalItems: count,
+          totalPages: limit ? Math.ceil(count / limit) : 1, 
+          currentPage: limit ? parseInt(page) : 1, 
+          Trainings: rows,
+        });
+        return;
+      } else {
+        handleException(
+          constants.STATUS_CODES.DOES_NOT_EXIST,
+          constants.MESSAGES[constants.STATUS_CODES.DOES_NOT_EXIST],
+          res
+        );
+        return;
+      }
+    } else {
+      const message = constants.STRINGS.ERROR_FETCHING_TRAININGS;
+      return errorHandle(result.data, res, message);
+    }
+  } catch (e) {
+    return exception(res);
+  }
+};
