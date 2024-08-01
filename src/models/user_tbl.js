@@ -1,12 +1,13 @@
 const { Model, DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
-  class User extends Model {
+class User extends Model {
     static associate(models) {
       User.belongsTo(models.Role, {
         foreignKey: "role_id",
         as: "role",
       });
+  User.hasMany(models.Batch, { foreignKey: 'created_by', as: 'batches' });
     }
   }
 

@@ -2,6 +2,7 @@ const batchService = require("./batches.service");
 const constants = require("../../constants");
 const Schema = require("./batches.validation");
 const { handleException, errorHandle, exception } = require("../../utils");
+const { User } = require('../../models'); 
 
 exports.validateRequestBody = async (req, res, next) => {
   let schema = Schema.validateUserReqBody();
@@ -15,10 +16,52 @@ exports.validateRequestBody = async (req, res, next) => {
   }
 };
 
+// exports.addBatch = async (req, res) => {
+//   try {
+//     const requestBody = req.body;
+//     requestBody.role_id = req.header("role_id");
+//     let insertBatch = await batchService.addBatch(requestBody);
+//     if (insertBatch.status === constants.STATUS.TRUE) {
+//       if (insertBatch.data === constants.STRINGS.BATCH_EXIST) {
+//         res.status(constants.STATUS_CODES.CONFLICT).json({
+//           status: constants.STATUS.FALSE,
+//           statusCode: constants.STATUS_CODES.CONFLICT,
+//           message: insertBatch.data,
+//         });
+//       } else {
+//         res.status(constants.STATUS_CODES.OK).json({
+//           status: constants.STATUS.TRUE,
+//           statusCode: constants.STATUS_CODES.OK,
+//           message: constants.STRINGS.ADD_BATCH,
+//         });
+//       }
+//     } else {
+//       handleException(
+//         constants.STATUS_CODES.SOMETHING_WENT_WRONG,
+//         constants.MESSAGES[constants.STATUS_CODES.SOMETHING_WENT_WRONG],
+//         res
+//       );
+//     }
+//   } catch (e) {
+//     exception(res);
+//   }
+// };
+
+
 exports.addBatch = async (req, res) => {
   try {
     const requestBody = req.body;
-    requestBody.role_id = req.header("role_id");
+    const userNames = requestBody.users; // Get the array of user names
+
+    // Fetch user IDs from the database
+    const userIds = await getUserIdsFromNames(userNames); // Function to fetch user IDs from names
+
+    // Get the role ID and set it to created_by
+    const roleId = req.header("role_id");
+    requestBody.created_by = roleId; // Store the role ID in created_by
+    requestBody.user_ids = userIds; // Store the user IDs in user_ids
+
+    // Proceed with inserting the batch
     let insertBatch = await batchService.addBatch(requestBody);
     if (insertBatch.status === constants.STATUS.TRUE) {
       if (insertBatch.data === constants.STRINGS.BATCH_EXIST) {
@@ -42,8 +85,22 @@ exports.addBatch = async (req, res) => {
       );
     }
   } catch (e) {
+    console.log("eeeeeeeeee",e);
     exception(res);
   }
+};
+
+
+const getUserIdsFromNames = async (userNames) => {
+  console.log("userNames",userNames);
+  const users = await User.findAll({
+    where: {
+      username: userNames, 
+    },
+  
+  });
+    console.log("users",users);
+  return users.map(user => user.user_id); // Return an array of user IDs
 };
 
 exports.fetchBatch = async (req, res) => {

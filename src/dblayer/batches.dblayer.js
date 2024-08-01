@@ -6,6 +6,7 @@ const { Op } = require('sequelize');
 const { handleException, errorHandle, exception } = require("../utils");
 const {Training} = require('../models');
 exports.insertBatch = async (data) => {
+  console.log("data",data);
     try {
         let existingBatch = await Batch.findAll({ where: { batch_name: data.batch_name } });
         if(existingBatch.length > constants.NUMBERS.ZERO){
@@ -14,7 +15,8 @@ exports.insertBatch = async (data) => {
         let batch = await Batch.create({
             batch_name: data.batch_name,
             users: data.users,
-            created_by: data.role_id
+            created_by: data.created_by,
+            user_ids:data.user_ids
          
         });
         return ({ status: constants.STATUS.TRUE, data: batch });

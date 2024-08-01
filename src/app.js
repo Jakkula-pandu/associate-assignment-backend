@@ -26,9 +26,10 @@ cacheProvider.start((err) => {
 
 const Batch = require('./models/batch_tbl')(sequelize);
 const Assessment = require('./models/assessment_tbl')(sequelize);
-
-// Setup associations
-Batch.associate({ Assessment });
+const User = require('./models/user_tbl')(sequelize);
+const Role = require('./models/user_tbl')(sequelize);
+User.associate({ Batch, Role });
+Batch.associate({ User, Assessment });
 Assessment.associate({ Batch });
 sequelize.sync({ force: false }) 
   .then(() => {

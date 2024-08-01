@@ -1,9 +1,10 @@
-
 const { Model, DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
   class Batch extends Model {
     static associate(models) {
+      // // If you want to associate with User, change the alias to avoid collision
+      // Batch.belongsTo(models.User, { foreignKey: 'created_by', as: 'creator' });
     }
   }
 
@@ -20,7 +21,7 @@ module.exports = (sequelize) => {
         allowNull: true,
       },
       created_by: {
-        type: DataTypes.STRING(250),
+        type: DataTypes.INTEGER,
         allowNull: true,
       },
       created_date: {
@@ -29,7 +30,11 @@ module.exports = (sequelize) => {
         defaultValue: sequelize.literal("CURRENT_TIMESTAMP"),
       },
       users: {
-        type: DataTypes.JSONB,
+        type: DataTypes.JSONB, 
+        allowNull: true,
+      },
+       user_ids: {
+        type: DataTypes.JSONB, // Store user IDs as a JSON array
         allowNull: true,
       },
     },
