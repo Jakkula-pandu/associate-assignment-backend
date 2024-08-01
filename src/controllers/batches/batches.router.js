@@ -5,5 +5,5 @@ const commonController = require('../../common/common.controller')
 
 router.post('/add-batch',commonController.roleIdValidation,batchController.validateRequestBody,batchController.addBatch);
 router.get('/fetch-batches',batchController.fetchBatch);
-router.get('/fetch-trainings',batchController.fetchTraining);
+
 module.exports = router;

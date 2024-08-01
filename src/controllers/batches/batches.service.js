@@ -15,10 +15,4 @@ exports.fetchBatches = async ( page, size, search) => {
   return users;
 };
 
-exports.fetchAllTrainings = async (role_id, limit, offset, search) => {
-  let trainings = await batchDbLayer.fetchAllTrainings(role_id, limit, offset, search);
-  serviceLayerResponse(trainings);
-  return trainings;
-
-};
 

@@ -13,9 +13,9 @@ exports.insertBatch = async (data) => {
         }
         let batch = await Batch.create({
             batch_name: data.batch_name,
-            user_name: data.username,
-            created_by: data.role_id,
-            trainings:data.trainings
+            users: data.users,
+            created_by: data.role_id
+         
         });
         return ({ status: constants.STATUS.TRUE, data: batch });
     } catch (error) {
@@ -53,32 +53,3 @@ exports.fetchAllBatches = async ( limit, offset, search) => {
   }
 };
 
-
-exports.fetchAllTrainings = async (role_id, limit, offset, search) => {
-  try {
-    let whereCondition = {
-      [Op.and]: [],
-    };
-
-    if (search && search.length >= constants.NUMBERS.THREE) {
-      whereCondition[Op.and].push({
-        [Op.or]: [
-          { trainings: { [Op.iLike]: `%${search}%` } },
-        ],
-      });
-    } else if (search && search.length < constants.NUMBERS.THREE) {
-      return errorHandle({ status: constants.STATUS.FALSE }, res, message);
-    }
-
-    const allTrainings = await Training.findAndCountAll({
-      where: whereCondition,
-      limit: limit > 0 ? limit : undefined, // If limit is 0, fetch all
-      offset: offset >= 0 ? offset : undefined, // If offset is negative, fetch all
-      order: [[constants.VARIABLES.CREATED_DATE, constants.VARIABLES.DESC]],
-     
-    });
-    return { status: constants.STATUS.TRUE, data: allTrainings };
-  } catch (error) {
-    return { status: constants.STATUS.FALSE, data: error };
-  }
-};

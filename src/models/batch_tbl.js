@@ -28,14 +28,10 @@ module.exports = (sequelize) => {
         allowNull: true,
         defaultValue: sequelize.literal("CURRENT_TIMESTAMP"),
       },
-      user_name: {
-        type: DataTypes.JSON,
+      users: {
+        type: DataTypes.JSONB,
         allowNull: true,
       },
-      trainings:{
-         type: DataTypes.STRING(70),
-        allowNull: true,
-      }
     },
     {
       sequelize,
