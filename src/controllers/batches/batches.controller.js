@@ -1,40 +1,57 @@
 const batchService = require("./batches.service");
 const constants = require("../../constants");
-const Schema = require('./batches.validation');
+const Schema = require("./batches.validation");
 const { handleException, errorHandle, exception } = require("../../utils");
 
 exports.validateRequestBody = async (req, res, next) => {
-    let schema = Schema.validateUserReqBody();
-    let { error } = schema.validate(req.body);
-    if (error) {
-      const statusCode = constants.STATUS_CODES.BAD_REQUEST;
-        const message = error.details.map(detail => detail.message).join(', ');
-        handleException(statusCode, message, res);
-    }
-    else {
-        next();
-    }
-}
+  let schema = Schema.validateUserReqBody();
+  let { error } = schema.validate(req.body);
+  if (error) {
+    const statusCode = constants.STATUS_CODES.BAD_REQUEST;
+    const message = error.details.map((detail) => detail.message).join(", ");
+    handleException(statusCode, message, res);
+  } else {
+    next();
+  }
+};
 
 exports.addBatch = async (req, res) => {
-    try {
-        const requestBody = req.body;
-        requestBody.role_id = req.header("role_id");
-        let insertBatch = await batchService.addBatch(requestBody);
-        return res.status(200).json(insertBatch);
-    } catch (e) {
-    exception(res)
+  try {
+    const requestBody = req.body;
+    requestBody.role_id = req.header("role_id");
+    let insertBatch = await batchService.addBatch(requestBody);
+    if (insertBatch.status === constants.STATUS.TRUE) {
+      if (insertBatch.data === constants.STRINGS.BATCH_EXIST) {
+        res.status(constants.STATUS_CODES.CONFLICT).json({
+          status: constants.STATUS.FALSE,
+          statusCode: constants.STATUS_CODES.CONFLICT,
+          message: insertBatch.data,
+        });
+      } else {
+        res.status(constants.STATUS_CODES.OK).json({
+          status: constants.STATUS.TRUE,
+          statusCode: constants.STATUS_CODES.OK,
+          message: constants.STRINGS.ADD_BATCH,
+        });
+      }
+    } else {
+      handleException(
+        constants.STATUS_CODES.SOMETHING_WENT_WRONG,
+        constants.MESSAGES[constants.STATUS_CODES.SOMETHING_WENT_WRONG],
+        res
+      );
     }
+  } catch (e) {
+    exception(res);
+  }
 };
 
 exports.fetchBatch = async (req, res) => {
   try {
-    const {
-      size = process.env.page_Size || constants.NUMBERS.TEN,
-      search,
-    } = req.query;
+    const { size = process.env.page_Size || constants.NUMBERS.TEN, search } =
+      req.query;
     const page = req.query.page || constants.NUMBERS.ONE;
-    const result = await batchService.fetchBatches( page, size, search);
+    const result = await batchService.fetchBatches(page, size, search);
     if (result.status === constants.STATUS.TRUE) {
       const { count, rows } = result.data;
       if (rows.length > constants.NUMBERS.ZERO) {
@@ -50,7 +67,7 @@ exports.fetchBatch = async (req, res) => {
       } else {
         handleException(
           constants.STATUS_CODES.DOES_NOT_EXIST,
-           constants.STRINGS.NO_RECORDS,
+          constants.STRINGS.NO_RECORDS,
           res
         );
         return;
@@ -59,12 +76,10 @@ exports.fetchBatch = async (req, res) => {
       const message = constants.STRINGS.ERROR_FETCHING_USERS;
       return errorHandle(result.data, res, message);
     }
-  } catch(e) {
+  } catch (e) {
     return exception(res);
   }
 };
-
-
 
 exports.fetchTraining = async (req, res) => {
   try {
@@ -82,10 +97,15 @@ exports.fetchTraining = async (req, res) => {
       offset = (parseInt(page) - constants.NUMBERS.ONE) * limit;
     } else {
       limit = undefined;
-      offset = undefined; 
+      offset = undefined;
     }
 
-    const result = await batchService.fetchAllTrainings(role_id, limit, offset, search);
+    const result = await batchService.fetchAllTrainings(
+      role_id,
+      limit,
+      offset,
+      search
+    );
     if (result.status === constants.STATUS.TRUE) {
       const { count, rows } = result.data;
 
@@ -94,8 +114,8 @@ exports.fetchTraining = async (req, res) => {
           status: constants.STATUS.TRUE,
           code: constants.STATUS_CODES.OK,
           totalItems: count,
-          totalPages: limit ? Math.ceil(count / limit) : 1, 
-          currentPage: limit ? parseInt(page) : 1, 
+          totalPages: limit ? Math.ceil(count / limit) : 1,
+          currentPage: limit ? parseInt(page) : 1,
           Trainings: rows,
         });
         return;

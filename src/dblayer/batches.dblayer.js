@@ -9,12 +9,13 @@ exports.insertBatch = async (data) => {
     try {
         let existingBatch = await Batch.findAll({ where: { batch_name: data.batch_name } });
         if(existingBatch.length > constants.NUMBERS.ZERO){
-            return { status: constants.STATUS.FALSE, data: constants.STRINGS.BATCH_EXIST};
+            return { status: constants.STATUS.TRUE, data: constants.STRINGS.BATCH_EXIST};
         }
         let batch = await Batch.create({
             batch_name: data.batch_name,
             user_name: data.username,
-            created_by: data.role_id
+            created_by: data.role_id,
+            trainings:data.trainings
         });
         return ({ status: constants.STATUS.TRUE, data: batch });
     } catch (error) {
