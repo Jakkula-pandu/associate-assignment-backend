@@ -32,6 +32,10 @@ module.exports = (sequelize) => {
         type: DataTypes.JSON,
         allowNull: true,
       },
+      trainings:{
+         type: DataTypes.STRING(70),
+        allowNull: true,
+      }
     },
     {
       sequelize,
