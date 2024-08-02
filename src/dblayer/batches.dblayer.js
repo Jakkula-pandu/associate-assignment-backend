@@ -26,12 +26,18 @@ exports.insertBatch = async (data) => {
     }
 }
 
-exports.fetchAllBatches = async ( limit, offset, search) => {
+exports.fetchAllBatches = async (  page, size, search,user_id,limit, offset) => {
   try {
     let whereCondition = {
       [Op.and]: [],
     };
-
+  if (user_id) {
+    whereCondition[Op.and].push({
+      user_ids: {
+        [Op.contains]: [parseInt(user_id)], 
+      },
+    });
+  }
     if (search && search.length >= constants.NUMBERS.THREE) {
       whereCondition[Op.and].push({
         [Op.or]: [
@@ -45,8 +51,8 @@ exports.fetchAllBatches = async ( limit, offset, search) => {
 
     const allBatches = await Batch.findAndCountAll({
       where: whereCondition,
-      limit: limit,
-      offset: offset,
+       limit: limit > 0 ? limit : undefined, // If limit is 0, fetch all
+      offset: offset >= 0 ? offset : undefined, // If offset is negative, fetch all
       order: [[constants.VARIABLES.CREATED_DATE, constants.VARIABLES.DESC]],
     });
     return { status: constants.STATUS.TRUE, data: allBatches };

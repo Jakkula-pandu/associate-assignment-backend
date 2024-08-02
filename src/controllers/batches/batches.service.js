@@ -7,10 +7,8 @@ exports.addBatch = async (payload) => {
     return serviceLayerResponse(addBatch)
 }
 
-exports.fetchBatches = async ( page, size, search) => {
-  const limit = parseInt(size);
-  const offset = (parseInt(page) - constants.NUMBERS.ONE) * limit;
-  let users = await batchDbLayer.fetchAllBatches(limit, offset, search);
+exports.fetchBatches = async ( page, size, search,user_id,limit, offset) => {
+  let users = await batchDbLayer.fetchAllBatches( page, size, search,user_id,limit, offset);
   serviceLayerResponse(users);
   return users;
 };

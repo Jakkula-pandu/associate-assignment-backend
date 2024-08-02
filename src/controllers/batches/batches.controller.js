@@ -105,10 +105,20 @@ const getUserIdsFromNames = async (userNames) => {
 
 exports.fetchBatch = async (req, res) => {
   try {
-    const { size = process.env.page_Size || constants.NUMBERS.TEN, search } =
+    const { size = process.env.page_Size || constants.NUMBERS.TEN, search,user_id } =
       req.query;
     const page = req.query.page || constants.NUMBERS.ONE;
-    const result = await batchService.fetchBatches(page, size, search);
+     let limit, offset;
+ 
+    if (page && parseInt(page) > 0) {
+      limit = parseInt(size);
+      offset = (parseInt(page) - constants.NUMBERS.ONE) * limit;
+    } else {
+      limit = undefined; // When fetching all records
+      offset = undefined; // When fetching all records
+    }
+    const result = await batchService.fetchBatches(page, size, search,user_id,limit, offset,);
+    console.log("result",result);
     if (result.status === constants.STATUS.TRUE) {
       const { count, rows } = result.data;
       if (rows.length > constants.NUMBERS.ZERO) {
@@ -134,6 +144,7 @@ exports.fetchBatch = async (req, res) => {
       return errorHandle(result.data, res, message);
     }
   } catch (e) {
+    console.log("eeeeee",e);
     return exception(res);
   }
 };
