@@ -65,7 +65,8 @@ module.exports = {
     BATCH_EXIST:'Batch with this name already exists.',
     ASSESSMENT_EXIST:'Assessment with this name already exists.',
     ERROR_FETCHING_TRAININGS:"Error fetching trainings",
-    ADD_BATCH:"Batch added successfully"
+    ADD_BATCH:"Batch added successfully",
+    ADD_ASSESSMENT:"Assessment added successfully"
   },
   VARIABLES: {
     ROLE: "role",

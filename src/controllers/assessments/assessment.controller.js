@@ -22,7 +22,29 @@ exports.addAssessment=async(req,res)=>{
         requestBody.role_id = req.header("role_id");
         requestBody.batch_id = req.header("batch_id");
         let insertAssessment = await assessmentService.addAssessment(requestBody);
-        return res.status(200).json(insertAssessment);
+
+        // return res.status(200).json(insertAssessment);
+           if (insertAssessment.status === constants.STATUS.TRUE) {
+      if (insertAssessment.data === constants.STRINGS.BATCH_EXIST) {
+        res.status(constants.STATUS_CODES.CONFLICT).json({
+          status: constants.STATUS.FALSE,
+          statusCode: constants.STATUS_CODES.CONFLICT,
+          message: insertAssessment.data,
+        });
+      } else {
+        res.status(constants.STATUS_CODES.OK).json({
+          status: constants.STATUS.TRUE,
+          statusCode: constants.STATUS_CODES.OK,
+          message: constants.STRINGS.ADD_ASSESSMENT,
+        });
+      }
+    } else {
+      handleException(
+        constants.STATUS_CODES.SOMETHING_WENT_WRONG,
+        constants.MESSAGES[constants.STATUS_CODES.SOMETHING_WENT_WRONG],
+        res
+      );
+    }
     } catch (e) {
     exception(res)
     }
