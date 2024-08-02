@@ -30,12 +30,22 @@ exports.addAssessment=async(req,res)=>{
 
 exports.fetchAssessment = async (req, res) => {
   try {
-    const {
+    const {page,
       size = process.env.page_Size || constants.NUMBERS.TEN,
       search,
     } = req.query;
-    const page = req.query.page || constants.NUMBERS.ONE;
-    const result = await assessmentService.fetchAssessments( page, size, search);
+     let limit, offset;
+ 
+    if (page && parseInt(page) > 0) {
+      limit = parseInt(size);
+      offset = (parseInt(page) - constants.NUMBERS.ONE) * limit;
+    } else {
+      limit = undefined; // When fetching all records
+      offset = undefined; // When fetching all records
+    }
+
+    const result = await assessmentService.fetchAssessments( page, size, search,limit,offset);
+    console.log("result",result);
     if (result.status === constants.STATUS.TRUE) {
       const { count, rows } = result.data;
       if (rows.length > constants.NUMBERS.ZERO) {
@@ -61,6 +71,7 @@ exports.fetchAssessment = async (req, res) => {
       return errorHandle(result.data, res, message);
     }
   } catch(e) {
+    console.log("eeeee",e);
     return exception(res);
   }
 };

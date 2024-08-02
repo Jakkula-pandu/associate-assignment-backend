@@ -1,5 +1,5 @@
 const constants = require('../constants');
-const {Assessment} = require('../models');
+const {Assessment,Batch} = require('../models');
 const { all } = require('../controllers/batches/batches.router');
 const Sequelize = require('sequelize');
 const { Op } = require('sequelize');
@@ -23,7 +23,7 @@ exports.insertAssessment = async (data) => {
     }
 }
 
-exports.fetchAllAssessments = async ( limit, offset, search) => {
+exports.fetchAllAssessments = async (page, size, search,limit,offset) => {
   try {
     let whereCondition = {
       [Op.and]: [],
@@ -42,12 +42,24 @@ exports.fetchAllAssessments = async ( limit, offset, search) => {
 
     const allAssessments = await Assessment.findAndCountAll({
       where: whereCondition,
-      limit: limit,
-      offset: offset,
+      include: [
+  {
+    model: Batch,
+    as: 'role', // Make sure this matches the alias defined in the association
+    attributes: [
+      constants.VARIABLES.BATCH_ID,
+      constants.VARIABLES.BATCH_NAME,
+      constants.VARIABLES.CREATED_DATE,
+    ],
+  },
+],
+      limit: limit > 0 ? limit : undefined, 
+      offset: offset >= 0 ? offset : undefined, 
       order: [[constants.VARIABLES.CREATED_DATE, constants.VARIABLES.DESC]],
     });
     return { status: constants.STATUS.TRUE, data: allAssessments };
   } catch (error) {
+    console.log("eeeeeee",error);
     return { status: constants.STATUS.FALSE, data: error };
   }
 };

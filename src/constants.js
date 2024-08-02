@@ -73,5 +73,8 @@ module.exports = {
     ROLE_NAME: "role_name",
     CREATED_DATE: "created_date",
     DESC: "DESC",
+    BATCH_DATA:"batch details",
+    BATCH_ID:"batch_id",
+    BATCH_NAME:"batch_name",
   },
 };
