@@ -3,6 +3,7 @@ const constants = require("../../constants");
 const Schema = require("./batches.validation");
 const { handleException, errorHandle, exception } = require("../../utils");
 const { User } = require('../../models'); 
+const moment = require('moment-timezone');
 
 exports.validateRequestBody = async (req, res, next) => {
   let schema = Schema.validateUserReqBody();
@@ -59,7 +60,7 @@ exports.addBatch = async (req, res) => {
     // Get the role ID and set it to created_by
     const roleId = req.header("role_id");
     requestBody.created_by = roleId; // Store the role ID in created_by
-    requestBody.user_ids = userIds; // Store the user IDs in user_ids
+    // requestBody.user_ids = userIds; // Store the user IDs in user_ids
 
     // Proceed with inserting the batch
     let insertBatch = await batchService.addBatch(requestBody);
@@ -117,7 +118,17 @@ exports.fetchBatch = async (req, res) => {
       limit = undefined; // When fetching all records
       offset = undefined; // When fetching all records
     }
-    const result = await batchService.fetchBatches(page, size, search,user_id,limit, offset,);
+    const result = await batchService.fetchBatches(page, size, search,user_id,limit, offset);
+ result.data.rows.forEach(result => {
+    if (result.created_date) {
+      // Add 5 hours and 30 minutes using moment
+      result.created_date = moment(result.created_date)
+        .add(5, 'hours')
+        .add(30, 'minutes')
+        .format('YYYY-MM-DD HH:mm:ss'); // Adjust the format as needed
+    }
+  });
+
     console.log("result",result);
     if (result.status === constants.STATUS.TRUE) {
       const { count, rows } = result.data;

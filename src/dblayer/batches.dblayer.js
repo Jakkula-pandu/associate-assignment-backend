@@ -1,5 +1,5 @@
 const constants = require('../constants');
-const {Batch} = require('../models');
+const {Batch,User} = require('../models');
 const { all } = require("../controllers/batches/batches.router");
 const Sequelize = require('sequelize');
 const { Op } = require('sequelize');
@@ -16,7 +16,7 @@ exports.insertBatch = async (data) => {
             batch_name: data.batch_name,
             users: data.users,
             created_by: data.created_by,
-            user_ids:data.user_ids
+            // user_ids:data.user_ids
          
         });
         return ({ status: constants.STATUS.TRUE, data: batch });
@@ -57,6 +57,7 @@ exports.fetchAllBatches = async (  page, size, search,user_id,limit, offset) => 
     });
     return { status: constants.STATUS.TRUE, data: allBatches };
   } catch (error) {
+    console.log("eeeeeeee",error);
     return { status: constants.STATUS.FALSE, data: error };
   }
 };

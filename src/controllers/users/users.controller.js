@@ -72,6 +72,15 @@ exports.fetchUsers = async (req, res) => {
     }
  
     const result = await userService.fetchAllUsers(role_id, limit, offset, search);
+     result.data.rows.forEach(result => {
+    if (result.created_date) {
+      // Add 5 hours and 30 minutes using moment
+      result.created_date = moment(result.created_date)
+        .add(5, 'hours')
+        .add(30, 'minutes')
+        .format('YYYY-MM-DD HH:mm:ss'); 
+    }
+  });
     console.log("result",result);
     if (result.status === constants.STATUS.TRUE) {
       const { count, rows } = result.data;

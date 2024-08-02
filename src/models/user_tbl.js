@@ -7,7 +7,7 @@ class User extends Model {
         foreignKey: "role_id",
         as: "role",
       });
-  User.hasMany(models.Batch, { foreignKey: 'created_by', as: 'batches' });
+
     }
   }
 

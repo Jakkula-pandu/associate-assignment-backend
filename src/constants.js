@@ -76,5 +76,8 @@ module.exports = {
     BATCH_DATA:"batch details",
     BATCH_ID:"batch_id",
     BATCH_NAME:"batch_name",
+    USER:"user",
+    USER_ID:"user_id",
+    USER_NAME:"username"
   },
 };

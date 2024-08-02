@@ -3,8 +3,11 @@ const { Model, DataTypes } = require("sequelize");
 module.exports = (sequelize) => {
   class Batch extends Model {
     static associate(models) {
-      // // If you want to associate with User, change the alias to avoid collision
-      // Batch.belongsTo(models.User, { foreignKey: 'created_by', as: 'creator' });
+         Batch.belongsTo(models.User, {
+        foreignKey: "user_id",
+        as: "user",
+      });
+
     }
   }
 
@@ -33,10 +36,10 @@ module.exports = (sequelize) => {
         type: DataTypes.JSONB, 
         allowNull: true,
       },
-       user_ids: {
-        type: DataTypes.JSONB, // Store user IDs as a JSON array
-        allowNull: true,
-      },
+      //  user_ids: {
+      //   type: DataTypes.JSONB, // Store user IDs as a JSON array
+      //   allowNull: true,
+      // },
     },
     {
       sequelize,

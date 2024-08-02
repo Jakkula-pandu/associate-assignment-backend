@@ -46,6 +46,15 @@ exports.fetchAssessment = async (req, res) => {
 
     const result = await assessmentService.fetchAssessments( page, size, search,limit,offset);
     console.log("result",result);
+     result.data.rows.forEach(result => {
+    if (result.created_date) {
+      // Add 5 hours and 30 minutes using moment
+      result.created_date = moment(result.created_date)
+        .add(5, 'hours')
+        .add(30, 'minutes')
+        .format('YYYY-MM-DD HH:mm:ss'); // Adjust the format as needed
+    }
+  });
     if (result.status === constants.STATUS.TRUE) {
       const { count, rows } = result.data;
       if (rows.length > constants.NUMBERS.ZERO) {
