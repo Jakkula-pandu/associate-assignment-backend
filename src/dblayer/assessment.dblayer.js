@@ -45,7 +45,7 @@ exports.fetchAllAssessments = async (page, size, search,limit,offset) => {
       include: [
   {
     model: Batch,
-    as: 'role', // Make sure this matches the alias defined in the association
+    as: constants.VARIABLES.ROLE, 
     attributes: [
       constants.VARIABLES.BATCH_ID,
       constants.VARIABLES.BATCH_NAME,

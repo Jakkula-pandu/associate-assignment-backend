@@ -2,7 +2,7 @@ const userService = require("./users.service");
 const constants = require("../../constants");
 const cacheProvider = require("../../cache/cache");
 const { handleException, errorHandle, exception } = require("../../utils");
-
+const moment = require('moment-timezone');
 // exports.fetchUsers = async (req, res) => {
 //   try {
 //     const {
@@ -109,6 +109,7 @@ exports.fetchUsers = async (req, res) => {
       return errorHandle(result.data, res, message);
     }
   } catch (e) {
+    console.log("eeeeeeeeee",e);
     return exception(res);
   }
 };
