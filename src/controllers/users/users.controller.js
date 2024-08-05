@@ -58,7 +58,7 @@ exports.fetchUsers = async (req, res) => {
       role_id,
       page,
       size = process.env.page_Size || constants.NUMBERS.TEN,
-      search,
+      search,user_id
     } = req.query;
  
     let limit, offset;
@@ -71,7 +71,8 @@ exports.fetchUsers = async (req, res) => {
       offset = undefined; // When fetching all records
     }
  
-    const result = await userService.fetchAllUsers(role_id, limit, offset, search);
+    const result = await userService.fetchAllUsers(role_id, limit, offset, search,user_id);
+    console.log("result",result);
      result.data.rows.forEach(result => {
     if (result.created_date) {
       // Add 5 hours and 30 minutes using moment

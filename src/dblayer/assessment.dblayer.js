@@ -9,26 +9,30 @@ exports.insertAssessment = async (data) => {
     try {
         let existingAssessment = await Assessment.findAll({ where: { assessment_name: data.assessment_name, batch_id: data.batch_id } });
         if(existingAssessment.length > constants.NUMBERS.ZERO){
-            return { status: constants.STATUS.FALSE, data: constants.STRINGS.ASSESSMENT_EXIST};
+            return { status: constants.STATUS.TRUE, data: constants.STRINGS.ASSESSMENT_EXIST};
         }
         let assessment = await Assessment.create({
             assessment_name: data.assessment_name,
             batch_id: data.batch_id,
             created_by: data.role_id
         });
+        console.log("assessment",assessment);
         return ({ status: constants.STATUS.TRUE, data: assessment });
     } catch (error) {
         return ({ status: constants.STATUS.FALSE, data: error });
-
     }
 }
 
-exports.fetchAllAssessments = async (page, size, search,limit,offset) => {
+exports.fetchAllAssessments = async (page,size,search,limit,offset,batch_id) => {
   try {
     let whereCondition = {
       [Op.and]: [],
     };
-
+if(batch_id){
+     whereCondition[Op.and].push({
+        batch_id: batch_id,
+      });
+}
     if (search && search.length >= constants.NUMBERS.THREE) {
       whereCondition[Op.and].push({
         [Op.or]: [
@@ -59,7 +63,6 @@ exports.fetchAllAssessments = async (page, size, search,limit,offset) => {
     });
     return { status: constants.STATUS.TRUE, data: allAssessments };
   } catch (error) {
-    console.log("eeeeeee",error);
     return { status: constants.STATUS.FALSE, data: error };
   }
 };

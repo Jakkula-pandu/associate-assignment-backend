@@ -6,8 +6,8 @@ exports.addAssessment = async (payload) => {
     let addAssessment = await assessmentDbLayer.insertAssessment(payload)
     return serviceLayerResponse(addAssessment)
 }
-exports.fetchAssessments = async ( page, size, search,limit,offset) => {
-  let assessment = await assessmentDbLayer.fetchAllAssessments( page, size, search,limit,offset);
+exports.fetchAssessments = async ( page, size, search,limit,offset,batch_id) => {
+  let assessment = await assessmentDbLayer.fetchAllAssessments( page, size, search,limit,offset,batch_id);
   serviceLayerResponse(assessment);
   return assessment;
 };

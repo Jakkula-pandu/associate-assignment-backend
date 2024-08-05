@@ -22,10 +22,9 @@ exports.addAssessment=async(req,res)=>{
         requestBody.role_id = req.header("role_id");
         requestBody.batch_id = req.header("batch_id");
         let insertAssessment = await assessmentService.addAssessment(requestBody);
-
-        // return res.status(200).json(insertAssessment);
+         console.log("insertAssessment",insertAssessment);
            if (insertAssessment.status === constants.STATUS.TRUE) {
-      if (insertAssessment.data === constants.STRINGS.BATCH_EXIST) {
+      if (insertAssessment.data === constants.STRINGS.ASSESSMENT_EXIST) {
         res.status(constants.STATUS_CODES.CONFLICT).json({
           status: constants.STATUS.FALSE,
           statusCode: constants.STATUS_CODES.CONFLICT,
@@ -54,7 +53,7 @@ exports.fetchAssessment = async (req, res) => {
   try {
     const {page,
       size = process.env.page_Size || constants.NUMBERS.TEN,
-      search,
+      search,batch_id
     } = req.query;
      let limit, offset;
  
@@ -66,7 +65,7 @@ exports.fetchAssessment = async (req, res) => {
       offset = undefined; // When fetching all records
     }
 
-    const result = await assessmentService.fetchAssessments( page, size, search,limit,offset);
+    const result = await assessmentService.fetchAssessments( page, size, search,limit,offset,batch_id);
     console.log("result",result);
      result.data.rows.forEach(result => {
     if (result.created_date) {
