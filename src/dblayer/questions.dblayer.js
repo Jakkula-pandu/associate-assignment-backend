@@ -9,12 +9,14 @@ exports.submitTest = async (data) => {
       let dataResult;
 if(data.assessment_id){
    dataResult=await Assessment.findAll({ where: { assessment_id: data.assessment_id } })
-  if(dataResult.length>0){
-    console.log("dataresult",dataResult[0]?.dataValues.assessment_name);
+  if(dataResult.length > constants.NUMBERS.ZERO){
   }
 }
 if(data.user_id){
-  let userData=await Submission.findAll({where:{user_id:data.user_id,assessment_id:data.assessment_id}})
+  let userData=await Submission.findAll({where:{user_id:data.user_id,assessment_id:data.assessment_id}});
+  if(userData.length > constants.NUMBERS.ZERO){
+      return { status: constants.STATUS.TRUE, data: constants.STRINGS.ASSESSMENT_ALREADY_SUBMIT };
+  }
 }
         const submission = await Submission.create({
       user_id: data.user_id,
@@ -27,7 +29,7 @@ if(data.user_id){
       assessment_name:dataResult[0]?.dataValues.assessment_name
 
     });
-console.log("submission",submission);
+
 
     for (const answer of  data.answers) {
       if (!answer.question_id) {
@@ -49,11 +51,6 @@ console.log("submission",submission);
     }
 };
 
-
-
-
-
-
 exports.insertQuestion = async (data) => {
   try {
     let existingQuestions = await questions.findAll({ where: { question_text: data.question_text } });
@@ -62,6 +59,10 @@ exports.insertQuestion = async (data) => {
     }
     
     console.log("data", data);
+      await Assessment.update(
+      { is_questions: true },
+      { where: { assessment_id: data.assessment_id } } 
+    );
     let question = await questions.create({
       question_text: data.question_text,
       question_type: data.question_type,
@@ -87,36 +88,90 @@ if(assessment_id){
         assessment_id: assessment_id,
       });
 }
-    // if (search && search.length >= constants.NUMBERS.THREE) {
-    //   whereCondition[Op.and].push({
-    //     [Op.or]: [
-    //       { assessment_name: { [Op.iLike]: `%${search}%` } },
  
-    //     ],
-    //   });
-    // } else if (search && search.length < constants.NUMBERS.THREE) {
-    //   return errorHandle({ status: constants.STATUS.FALSE }, res, message);
-    // }
 
     const allAssessments = await questions.findAndCountAll({
       where: whereCondition,
-//       include: [
-//   {
-//     model: Batch,
-//     as: constants.VARIABLES.ROLE, 
-//     attributes: [
-//       constants.VARIABLES.BATCH_ID,
-//       constants.VARIABLES.BATCH_NAME,
-//       constants.VARIABLES.CREATED_DATE,
-//     ],
-//   },
-// ],
       limit: limit > 0 ? limit : undefined, 
       offset: offset >= 0 ? offset : undefined, 
       order: [[constants.VARIABLES.CREATED_DATE, constants.VARIABLES.DESC]],
     });
     return { status: constants.STATUS.TRUE, data: allAssessments };
   } catch (error) {
+    return { status: constants.STATUS.FALSE, data: error };
+  }
+};
+
+
+
+exports.fetchAllUserAnswers = async (userId, batchId, assessmentId) => {
+  try {
+    const userAnswers = await Submission.findAll({
+      where: {
+        user_id: userId,
+        batch_id: batchId,
+        assessment_id: assessmentId,
+      },
+    });
+
+    console.log("userAnswers", JSON.stringify(userAnswers, null, 2));
+
+    const response = await Promise.all(userAnswers.map(async (answer) => {
+      console.log("answer", JSON.stringify(answer, null, 2));
+
+      const questionDetails = await questions.findOne({
+        where: { quns_id: answer.input_answers[0].question_id },
+        // include: [
+        //   {
+        //     model: Option,
+        //     as: 'options',
+        //   },
+        // ],
+      });
+
+      console.log("questionDetails", JSON.stringify(questionDetails, null, 2));
+
+      if (questionDetails) {
+        console.log("qqqqqqqqqq");
+
+        const result = {
+          question_id: questionDetails.quns_id,
+          question_text: questionDetails.question_text,
+          question_type: questionDetails.question_type,
+          user_answer: answer.input_answers,
+          correct_answers: questionDetails.correct_answers,
+        };
+console.log("resulttttttttt",result);
+        if (questionDetails.question_type === 'multiple_choice') {
+          result.options = questionDetails.options
+            ? questionDetails.options.map(option => ({
+                option: option.option,
+                isCorrect: option.isCorrect,
+              }))
+            : [];
+        }
+
+        return result;
+      } else {
+        console.log(`Question with id ${answer.input_answers[0].question_id} not found`);
+        return null;
+      }
+    }));
+
+    console.log("response", JSON.stringify(response, null, 2));
+
+    // Log each item in the response array
+    response.forEach(item => {
+      console.log("item********", item);
+    });
+
+    const filteredResponse = response.filter(item => item !== null);
+
+    console.log("filteredResponse", JSON.stringify(filteredResponse, null, 2));
+
+    return { status: constants.STATUS.TRUE, data: filteredResponse };
+  } catch (error) {
+    console.log("Error fetching user answers", error);
     return { status: constants.STATUS.FALSE, data: error };
   }
 };

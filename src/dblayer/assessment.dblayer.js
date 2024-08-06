@@ -1,5 +1,5 @@
 const constants = require('../constants');
-const {Assessment,Batch} = require('../models');
+const {Assessment,Batch,questions} = require('../models');
 const { all } = require('../controllers/batches/batches.router');
 const Sequelize = require('sequelize');
 const { Op } = require('sequelize');
@@ -14,7 +14,8 @@ exports.insertAssessment = async (data) => {
         let assessment = await Assessment.create({
             assessment_name: data.assessment_name,
             batch_id: data.batch_id,
-            created_by: data.role_id
+            created_by: data.role_id,
+            is_questions:false
         });
         console.log("assessment",assessment);
         return ({ status: constants.STATUS.TRUE, data: assessment });
@@ -23,7 +24,7 @@ exports.insertAssessment = async (data) => {
     }
 }
 
-exports.fetchAllAssessments = async (page,size,search,limit,offset,batch_id) => {
+exports.fetchAllAssessments = async (page,size,search,limit,offset,batch_id,assessment_id) => {
   try {
     let whereCondition = {
       [Op.and]: [],
@@ -33,6 +34,12 @@ if(batch_id){
         batch_id: batch_id,
       });
 }
+
+// if(batch_id && assessment_id){
+// let data = await questions.findAll({assessment_id:data.assessment_id})
+// console.log("data",data);
+// if(data)
+// }
     if (search && search.length >= constants.NUMBERS.THREE) {
       whereCondition[Op.and].push({
         [Op.or]: [

@@ -23,3 +23,8 @@ exports.fetchQuestions = async ( page, size, search,limit,offset,assessment_id) 
   serviceLayerResponse(assessment);
   return assessment;
 };
+exports.userAnswers = async (userId,batchId,assessmentId) => {
+  let assessmentAnswers = await questionDbLayer.fetchAllUserAnswers(userId,batchId,assessmentId);
+  serviceLayerResponse(assessmentAnswers);
+  return assessmentAnswers;
+};

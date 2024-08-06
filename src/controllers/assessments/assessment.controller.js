@@ -53,7 +53,7 @@ exports.fetchAssessment = async (req, res) => {
   try {
     const {page,
       size = process.env.page_Size || constants.NUMBERS.TEN,
-      search,batch_id
+      search,batch_id,assessment_id
     } = req.query;
      let limit, offset;
  
@@ -65,7 +65,7 @@ exports.fetchAssessment = async (req, res) => {
       offset = undefined; // When fetching all records
     }
 
-    const result = await assessmentService.fetchAssessments( page, size, search,limit,offset,batch_id);
+    const result = await assessmentService.fetchAssessments( page, size, search,limit,offset,batch_id,assessment_id);
     console.log("result",result);
      result.data.rows.forEach(result => {
     if (result.created_date) {
