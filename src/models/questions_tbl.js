@@ -1,20 +1,17 @@
 const { Model, DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
-  class Batch extends Model {
+  class Questions extends Model {
     static associate(models) {
-      Batch.belongsTo(models.User, {
-        foreignKey: "user_id",
-        as: "user",
-      });
-      Batch.belongsTo(models.Assessment, {
+
+      Questions.belongsTo(models.Assessment, {
         foreignKey: "assessment_id",
         as: "assessment",
       });
     }
   }
 
-  Batch.init(
+  Questions.init(
     {
       quns_id: {
         type: DataTypes.INTEGER,
@@ -22,14 +19,27 @@ module.exports = (sequelize) => {
         autoIncrement: true,
         allowNull: false,
       },
-      question: {
+      question_text: {
+        type: DataTypes.STRING(270),
+        allowNull: true,
+      },
+    question_type: {
         type: DataTypes.STRING(70),
         allowNull: true,
       },
          options: {
-        type: DataTypes.STRING(70),
+        type: DataTypes.JSONB,
+      
+      },
+      correct_answers:{
+       type: DataTypes.JSONB,
         allowNull: true,
       },
+      is_pending:{
+        type:DataTypes.BOOLEAN,
+        allowNull:true
+      },
+
       created_by: {
         type: DataTypes.STRING(250),
         allowNull: true,
@@ -39,10 +49,7 @@ module.exports = (sequelize) => {
         allowNull: true,
         defaultValue: sequelize.literal("CURRENT_TIMESTAMP"),
       },
-            is_true: {
-        type: DataTypes.STRING(250),
-        allowNull: true,
-      },
+ 
       assessment_id: {
         type: DataTypes.INTEGER,
         allowNull: true,
@@ -61,5 +68,5 @@ module.exports = (sequelize) => {
     }
   );
 
-  return Batch;
+  return Questions;
 };

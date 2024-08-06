@@ -11,6 +11,7 @@ const cacheProvider = require('./cache/cache');
 const user = require("./controllers/users/users.router");
 const batch =  require("./controllers/batches/batches.router");
 const assessment = require("./controllers/assessments/assessment.router");
+const questions = require("./controllers/questions/questions.router");
 const { sequelize } = require('./models'); 
 var logger = log4js.getLogger();
  app.use(cors());
@@ -38,4 +39,5 @@ sequelize.sync({ force: false })
 app.use("/v0.1/users",user);
 app.use("/v0.1/batches",batch);
 app.use("/v0.1/assessment",assessment);
+app.use("/v0.1/questions",questions);
 module.exports = app;

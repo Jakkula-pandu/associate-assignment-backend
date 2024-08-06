@@ -4,7 +4,6 @@ const fs = require("fs");
 const path = require("path");
 const Sequelize = require("sequelize");
 require("dotenv").config();
-
 const basename = path.basename(__filename);
 const db = {};
 
@@ -50,5 +49,6 @@ Object.keys(db).forEach((modelName) => {
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
+
 
 module.exports = db;
