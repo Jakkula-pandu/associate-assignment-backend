@@ -27,14 +27,6 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING(250),
         allowNull: true,
       },
-       is_attempted:{
-        type:DataTypes.BOOLEAN,
-        allowNull:false
-      },
-      users:{
-          type: DataTypes.JSONB, 
-        allowNull: true,
-      },
 
       created_date: {
         type: DataTypes.DATE,

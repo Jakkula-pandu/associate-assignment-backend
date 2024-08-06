@@ -1,20 +1,37 @@
 const constants = require('../constants');
-const {questions,User} = require('../models');
+const {questions,User,Submission} = require('../models');
 const { all } = require("../controllers/questions/questions.router");
 const Sequelize = require('sequelize');
 const { Op } = require('sequelize');
 
 exports.submitTest = async (data) => {
     try {
-        //    let existingQuestions = await questions.findAll({ where: { question_text: data.question_text } });
-        // if(existingQuestions.length > constants.NUMBERS.ZERO){
-        //     return { status: constants.STATUS.TRUE, data: constants.STRINGS.QUESTIONS_EXIST};
-        // }
-        console.log("data",data);
-        let question = await questions.update({
-             is_pending:false,           
-        });
-        return ({ status: constants.STATUS.TRUE, data: question });
+        const submission = await Submission.create({
+      user_id: requestBody.user_id,
+      assessment_id: requestBody.assessment_id,
+      batch_id: requestBody.batch_id,
+      is_attempted: true,
+      submission_date: new Date(),
+      input_answers: requestBody.answers,
+      created_by:requestBody.user_id
+
+    });
+console.log("submission",submission);
+
+    for (const answer of  requestBody.answers) {
+      if (!answer.question_id) {
+        throw new Error(`Missing question_id for answer: ${JSON.stringify(answer)}`);
+      }
+      
+      await AssessmentAnswer.create({
+        user_id: requestBody.user_id,
+        submission_id: submission.submission_id,
+        question_id: answer.question_id, // Ensure this is populated
+        answer_text: answer.answer,
+        is_correct: false // Replace with actual logic to determine correctness
+      });
+    }
+        return ({ status: constants.STATUS.TRUE});
     } catch (error) {
         return ({ status: constants.STATUS.FALSE, data: error });
 

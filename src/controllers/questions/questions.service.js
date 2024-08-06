@@ -4,11 +4,11 @@ const constants = require("../../constants");
 
 
 
-exports.submitTest = async (payload) => {
+exports.assessmentSubmit = async (payload) => {
     console.log("payload",payload);
-    const addQuestion = await questionDbLayer.submitTest(payload);
+    const assessmentSubmit = await questionDbLayer.submitTest(payload);
     console.log("addQuestion");
-    return serviceLayerResponse(addQuestion)
+    return serviceLayerResponse(assessmentSubmit)
 };
 
 

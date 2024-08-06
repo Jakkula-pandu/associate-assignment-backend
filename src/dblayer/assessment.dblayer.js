@@ -61,6 +61,7 @@ if(batch_id){
       offset: offset >= 0 ? offset : undefined, 
       order: [[constants.VARIABLES.CREATED_DATE, constants.VARIABLES.DESC]],
     });
+    console.log("allAssessments",allAssessments);
     return { status: constants.STATUS.TRUE, data: allAssessments };
   } catch (error) {
     return { status: constants.STATUS.FALSE, data: error };
