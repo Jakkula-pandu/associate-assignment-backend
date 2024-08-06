@@ -1,11 +1,21 @@
 const constants = require('../constants');
-const {questions,User,Submission,AssessmentAnswer} = require('../models');
+const {questions,User,Submission,AssessmentAnswer,Assessment} = require('../models');
 const { all } = require("../controllers/questions/questions.router");
 const Sequelize = require('sequelize');
 const { Op } = require('sequelize');
 
 exports.submitTest = async (data) => {
     try {
+      let dataResult;
+if(data.assessment_id){
+   dataResult=await Assessment.findAll({ where: { assessment_id: data.assessment_id } })
+  if(dataResult.length>0){
+    console.log("dataresult",dataResult[0]?.dataValues.assessment_name);
+  }
+}
+if(data.user_id){
+  let userData=await Submission.findAll({where:{user_id:data.user_id,assessment_id:data.assessment_id}})
+}
         const submission = await Submission.create({
       user_id: data.user_id,
       assessment_id: data.assessment_id,
@@ -13,7 +23,8 @@ exports.submitTest = async (data) => {
       is_attempted: true,
       submission_date: new Date(),
       input_answers: data.answers,
-      created_by:data.user_id
+      created_by:data.user_id,
+      assessment_name:dataResult[0]?.dataValues.assessment_name
 
     });
 console.log("submission",submission);
