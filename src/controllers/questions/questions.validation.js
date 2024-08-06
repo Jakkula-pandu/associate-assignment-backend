@@ -34,12 +34,15 @@ exports.validateUserReqBody = () => {
                 option: Joi.string().required()
                     .messages({ "any.required": 'Each option must have an option text' }),
                 isCorrect: Joi.boolean().required()
-                    .messages({ "any.required": 'Each option must have an isCorrect value' })
+                    .messages({ "any.required": 'Each option must have an isCorrect value' }),
+                  
             })
         ).optional(),
         correct_answers: Joi.array().items(
             Joi.string().required().messages({ "any.required": 'correct_answers is required' })
-        ).required().messages({ "any.required": 'correct_answers array is required' })
+        ).required().messages({ "any.required": 'correct_answers array is required' }),
+          userAnswer:Joi.boolean().optional()
+                    .messages({ "any.required": 'useranswer is required' }),
     }));
 };
 

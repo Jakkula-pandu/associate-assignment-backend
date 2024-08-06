@@ -1,5 +1,5 @@
 const constants = require('../constants');
-const {questions,User,Submission} = require('../models');
+const {questions,User,Submission,AssessmentAnswer} = require('../models');
 const { all } = require("../controllers/questions/questions.router");
 const Sequelize = require('sequelize');
 const { Op } = require('sequelize');
@@ -7,31 +7,31 @@ const { Op } = require('sequelize');
 exports.submitTest = async (data) => {
     try {
         const submission = await Submission.create({
-      user_id: requestBody.user_id,
-      assessment_id: requestBody.assessment_id,
-      batch_id: requestBody.batch_id,
+      user_id: data.user_id,
+      assessment_id: data.assessment_id,
+      batch_id: data.batch_id,
       is_attempted: true,
       submission_date: new Date(),
-      input_answers: requestBody.answers,
-      created_by:requestBody.user_id
+      input_answers: data.answers,
+      created_by:data.user_id
 
     });
 console.log("submission",submission);
 
-    for (const answer of  requestBody.answers) {
+    for (const answer of  data.answers) {
       if (!answer.question_id) {
         throw new Error(`Missing question_id for answer: ${JSON.stringify(answer)}`);
       }
       
       await AssessmentAnswer.create({
-        user_id: requestBody.user_id,
+        user_id: data.user_id,
         submission_id: submission.submission_id,
-        question_id: answer.question_id, // Ensure this is populated
+        question_id: answer.question_id, 
         answer_text: answer.answer,
-        is_correct: false // Replace with actual logic to determine correctness
+        is_correct: false 
       });
     }
-        return ({ status: constants.STATUS.TRUE});
+        return ({ status: constants.STATUS.TRUE,data:constants.STRINGS.ASSESSMENT_SUBMIT});
     } catch (error) {
         return ({ status: constants.STATUS.FALSE, data: error });
 
@@ -56,7 +56,7 @@ exports.insertQuestion = async (data) => {
       question_type: data.question_type,
       options: data.options,
       correct_answers: data.correct_answers,
-      is_pending: true,
+      userAnswer : false,
       created_by:data.created_by,
       assessment_id: data.assessment_id,
     });

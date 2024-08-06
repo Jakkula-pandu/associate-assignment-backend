@@ -35,7 +35,7 @@ module.exports = (sequelize) => {
        type: DataTypes.JSONB,
         allowNull: true,
       },
-      is_pending:{
+      userAnswer:{
         type:DataTypes.BOOLEAN,
         allowNull:true
       },

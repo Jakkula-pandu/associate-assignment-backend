@@ -68,7 +68,9 @@ module.exports = {
     ADD_BATCH:"Batch added successfully",
     ADD_ASSESSMENT:"Assessment added successfully",
     ADD_QUESTIONS:"questions added successfully",
-    QUESTIONS_EXIST:"questions already exists"
+    QUESTIONS_EXIST:"questions already exists",
+    ASSESSMENT_SUBMIT:"assessment submitted successfully!",
+    ASSESSMENT_ALREADY_SUBMIT:"assessment already submitted"
   },
   VARIABLES: {
     ROLE: "role",
