@@ -36,11 +36,10 @@ if(batch_id){
       });
 }
 
-// if(batch_id && assessment_id){
-// let data = await questions.findAll({assessment_id:data.assessment_id})
-// console.log("data",data);
-// if(data)
-// }
+if(assessment_id){
+  let questionDetails = await questions.findAll({assessment_id:assessment_id})
+  console.log("questionDetails",questionDetails);
+}
     if (search && search.length >= constants.NUMBERS.THREE) {
       whereCondition[Op.and].push({
         [Op.or]: [
