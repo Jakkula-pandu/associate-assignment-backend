@@ -187,7 +187,7 @@ console.log("userAnswers",userAnswers);
        res.status(constants.STATUS_CODES.OK).json({
           status: constants.STATUS.TRUE,
           statusCode: constants.STATUS_CODES.OK,
-          message: userAnswers,
+          userAnswers: userAnswers.data,
         });
     }
   } catch (e) {

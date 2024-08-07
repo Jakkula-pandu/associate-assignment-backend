@@ -64,6 +64,7 @@ exports.insertQuestion = async (data) => {
       { where: { assessment_id: data.assessment_id } } 
     );
     let question = await questions.create({
+      nof_of_questions:data.nof_of_questions,
       question_text: data.question_text,
       question_type: data.question_type,
       options: data.options,
@@ -104,6 +105,77 @@ if(assessment_id){
 
 
 
+// exports.fetchAllUserAnswers = async (userId, batchId, assessmentId) => {
+//   try {
+//     const userAnswers = await Submission.findAll({
+//       where: {
+//         user_id: userId,
+//         batch_id: batchId,
+//         assessment_id: assessmentId,
+//       },
+//     });
+
+//     console.log("userAnswers", JSON.stringify(userAnswers, null, 2));
+
+//     const response = await Promise.all(userAnswers.map(async (answer) => {
+//       console.log("answer",answer);
+
+//       const questionDetails = await questions.findOne({
+//         where: { quns_id: answer.input_answers[0].question_id },
+//       });
+
+//       console.log("questionDetails", JSON.stringify(questionDetails, null, 2));
+
+//       if (questionDetails) {
+//         console.log("qqqqqqqqqq");
+
+//         const result = {
+//           question_id: questionDetails.quns_id,
+//           question_text: questionDetails.question_text,
+//           question_type: questionDetails.question_type,
+//           // user_answer: answer.input_answers,
+//            user_answer: answer.input_answers.map(input => ({
+//             question_id: input.question_id, // Assuming input contains question_id
+//             answer: input.answer, // Assuming input contains the user's answer
+//           })),
+//           correct_answers: questionDetails.correct_answers,
+//         };
+// console.log("resulttttttttt",result);
+//         if (questionDetails.question_type === 'multiple_choice') {
+//           result.options = questionDetails.options
+//             ? questionDetails.options.map(option => ({
+//                 option: option.option,
+//                 isCorrect: option.isCorrect,
+//               }))
+//             : [];
+//         }
+
+//         return result;
+//       } else {
+//         console.log(`Question with id ${answer.input_answers[0].question_id} not found`);
+//         return null;
+//       }
+//     }));
+
+//     console.log("response", JSON.stringify(response, null, 2));
+
+//     // Log each item in the response array
+//     response.forEach(item => {
+//       console.log("item********", item);
+//     });
+
+//     const filteredResponse = response.filter(item => item !== null);
+
+//     console.log("filteredResponse", JSON.stringify(filteredResponse, null, 2));
+
+//     return { status: constants.STATUS.TRUE, data: filteredResponse };
+//   } catch (error) {
+//     console.log("Error fetching user answers", error);
+//     return { status: constants.STATUS.FALSE, data: error };
+//   }
+// };
+
+
 exports.fetchAllUserAnswers = async (userId, batchId, assessmentId) => {
   try {
     const userAnswers = await Submission.findAll({
@@ -116,62 +188,60 @@ exports.fetchAllUserAnswers = async (userId, batchId, assessmentId) => {
 
     console.log("userAnswers", JSON.stringify(userAnswers, null, 2));
 
-    const response = await Promise.all(userAnswers.map(async (answer) => {
+    const response = [];
+
+    for (const answer of userAnswers) {
       console.log("answer", JSON.stringify(answer, null, 2));
 
-      const questionDetails = await questions.findOne({
-        where: { quns_id: answer.input_answers[0].question_id },
-        // include: [
-        //   {
-        //     model: Option,
-        //     as: 'options',
-        //   },
-        // ],
-      });
+      for (const input of answer.input_answers) {
+        const questionDetails = await questions.findOne({
+          where: { quns_id: input.question_id },
+        });
 
-      console.log("questionDetails", JSON.stringify(questionDetails, null, 2));
+        console.log("questionDetails", JSON.stringify(questionDetails, null, 2));
 
-      if (questionDetails) {
-        console.log("qqqqqqqqqq");
+        if (questionDetails) {
+          console.log("qqqqqqqqqq");
 
-        const result = {
-          question_id: questionDetails.quns_id,
-          question_text: questionDetails.question_text,
-          question_type: questionDetails.question_type,
-          user_answer: answer.input_answers,
-          correct_answers: questionDetails.correct_answers,
-        };
-console.log("resulttttttttt",result);
-        if (questionDetails.question_type === 'multiple_choice') {
-          result.options = questionDetails.options
-            ? questionDetails.options.map(option => ({
-                option: option.option,
-                isCorrect: option.isCorrect,
-              }))
-            : [];
+          const result = {
+            question_id: questionDetails.quns_id,
+            question_text: questionDetails.question_text,
+            question_type: questionDetails.question_type,
+            user_answer: {
+              question_id: input.question_id,
+              answer: input.answer, // Assuming input contains the user's answer
+            },
+            correct_answers: questionDetails.correct_answers,
+          };
+
+          // Include options only if the question type is multiple_choice
+          if (questionDetails.question_type === 'multiple_choice') {
+            result.options = questionDetails.options
+              ? questionDetails.options.map(option => ({
+                  option: option.option,
+                  isCorrect: option.isCorrect,
+                }))
+              : [];
+          }
+
+          response.push(result); // Add the result to the response array
+        } else {
+          console.log(`Question with id ${input.question_id} not found`);
         }
-
-        return result;
-      } else {
-        console.log(`Question with id ${answer.input_answers[0].question_id} not found`);
-        return null;
       }
-    }));
+    }
 
     console.log("response", JSON.stringify(response, null, 2));
+    const finalResponse = {
+response,
+  
+    };
 
-    // Log each item in the response array
-    response.forEach(item => {
-      console.log("item********", item);
-    });
-
-    const filteredResponse = response.filter(item => item !== null);
-
-    console.log("filteredResponse", JSON.stringify(filteredResponse, null, 2));
-
-    return { status: constants.STATUS.TRUE, data: filteredResponse };
+    console.log("finalResponse", JSON.stringify(finalResponse, null, 2));
+ return { status: constants.STATUS.TRUE, data: finalResponse.response };
+ 
   } catch (error) {
     console.log("Error fetching user answers", error);
-    return { status: constants.STATUS.FALSE, data: error };
+    return { status: false, statusCode: 500, message: error }; // Return an error structure
   }
 };

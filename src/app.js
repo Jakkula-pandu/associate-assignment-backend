@@ -4,8 +4,6 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const cors=require('cors')
-const jwt = require('jsonwebtoken'); 
-var log4js = require("log4js");
 var sessionStorage = require('sessionstorage');
 const cacheProvider = require('./cache/cache');
 const user = require("./controllers/users/users.router");
@@ -13,7 +11,6 @@ const batch =  require("./controllers/batches/batches.router");
 const assessment = require("./controllers/assessments/assessment.router");
 const questions = require("./controllers/questions/questions.router");
 const { sequelize } = require('./models'); 
-var logger = log4js.getLogger();
  app.use(cors());
 sessionStorage.setItem("srcFolderPath",__dirname);
  app.use(bodyParser.json());

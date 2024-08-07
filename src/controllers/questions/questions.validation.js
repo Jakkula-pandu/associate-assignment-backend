@@ -52,6 +52,7 @@ const Joi = require('joi');
 
 exports.validateUserReqBody = () => {
     return Joi.array().items(Joi.object({
+        no_of_questions:Joi.string().required().messages({ "any.required": 'no of questions is required'}),
         question_text: Joi.string().required()
             .messages({ "any.required": 'question_text is required' }),
         question_type: Joi.string().valid('multiple_choice', 'text') // Adjust valid types as needed
