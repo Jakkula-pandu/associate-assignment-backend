@@ -52,17 +52,13 @@ exports.validateRequestBody = async (req, res, next) => {
 exports.addBatch = async (req, res) => {
   try {
     const requestBody = req.body;
-    const userNames = requestBody.users; // Get the array of user names
+    const userNames = requestBody.users; 
 
-    // Fetch user IDs from the database
-    const userIds = await getUserIdsFromNames(userNames); // Function to fetch user IDs from names
+    const userIds = await getUserIdsFromNames(userNames); 
 
-    // Get the role ID and set it to created_by
     const roleId = req.header("role_id");
-    requestBody.created_by = roleId; // Store the role ID in created_by
-    // requestBody.user_ids = userIds; // Store the user IDs in user_ids
+    requestBody.created_by = roleId; 
 
-    // Proceed with inserting the batch
     let insertBatch = await batchService.addBatch(requestBody);
     if (insertBatch.status === constants.STATUS.TRUE) {
       if (insertBatch.data === constants.STRINGS.BATCH_EXIST) {
@@ -101,7 +97,7 @@ const getUserIdsFromNames = async (userNames) => {
   
   });
     console.log("users",users);
-  return users.map(user => user.user_id); // Return an array of user IDs
+  return users.map(user => user.user_id);
 };
 
 // exports.fetchBatch = async (req, res) => {
@@ -169,24 +165,24 @@ exports.fetchBatch = async (req, res) => {
 
     if (page && parseInt(page) > 0) {
       limit = parseInt(size);
-      offset = (parseInt(page) - 1) * limit; // Change from constants.NUMBERS.ONE to 1 for clarity
+      offset = (parseInt(page) - 1) * limit; 
     } else {
-      limit = undefined; // When fetching all records
-      offset = undefined; // When fetching all records
+      limit = undefined; 
+      offset = undefined; 
     }
 
     const result = await batchService.fetchBatches(page, size, search, user_id, limit, offset);
     console.log("Fetched batches result:", result);
     
     if (result.status === constants.STATUS.TRUE) {
-      const { count, rows } = result.data || { count: 0, rows: [] }; // Default values if undefined
+      const { count, rows } = result.data || { count: 0, rows: [] }; 
       if (rows.length > constants.NUMBERS.ZERO) {
         rows.forEach(result => {
           if (result.created_date) {
             result.created_date = moment(result.created_date)
               .add(5, 'hours')
               .add(30, 'minutes')
-              .format('YYYY-MM-DD HH:mm:ss'); // Adjust the format as needed
+              .format('YYYY-MM-DD HH:mm:ss');
           }
         });
         res.status(constants.STATUS_CODES.OK).json({

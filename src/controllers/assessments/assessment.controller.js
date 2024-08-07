@@ -61,19 +61,18 @@ exports.fetchAssessment = async (req, res) => {
       limit = parseInt(size);
       offset = (parseInt(page) - constants.NUMBERS.ONE) * limit;
     } else {
-      limit = undefined; // When fetching all records
-      offset = undefined; // When fetching all records
+      limit = undefined; 
+      offset = undefined;
     }
 
     const result = await assessmentService.fetchAssessments( page, size, search,limit,offset,batch_id,assessment_id);
     console.log("result",result);
      result.data?.rows.forEach(result => {
     if (result.created_date) {
-      // Add 5 hours and 30 minutes using moment
       result.created_date = moment(result.created_date)
         .add(5, 'hours')
         .add(30, 'minutes')
-        .format('YYYY-MM-DD HH:mm:ss'); // Adjust the format as needed
+        .format('YYYY-MM-DD HH:mm:ss'); 
     }
   });
     if (result.status === constants.STATUS.TRUE) {

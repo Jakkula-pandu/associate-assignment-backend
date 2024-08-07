@@ -44,6 +44,6 @@ exports.validateReqBody = () => {
         question_id: Joi.number().required(),
         answer: Joi.string().required(),
       })
-    ).required(),  // Ensure this property is marked as required
+    ).required(),  
   });
 };

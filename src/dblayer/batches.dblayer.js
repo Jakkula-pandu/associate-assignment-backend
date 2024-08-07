@@ -42,14 +42,14 @@ exports.fetchAllBatches = async (page, size, search, user_id, limit, offset) => 
     });
     let filteredBatches = allBatches.rows;
   for (let batch of filteredBatches) {
-      const userIds = batch.users || []; // Default to empty array if undefined
+      const userIds = batch.users || []; 
       const users = await User.findAll({
         where: {
           username: {
             [Op.in]: userIds
           }
         },
-        attributes: ['user_id', 'username'] // Adjust attributes as needed
+        attributes: ['user_id', 'username'] 
       });
       batch.users = users;
     }
@@ -58,7 +58,7 @@ exports.fetchAllBatches = async (page, size, search, user_id, limit, offset) => 
   const userIdInt = parseInt(user_id);
   filteredBatches = filteredBatches.filter(batch => {
     const hasUser = batch.users && Array.isArray(batch.users) && batch.users.some(user => {
-      return user.user_id === userIdInt; // Use strict equality
+      return user.user_id === userIdInt; 
     });
     return hasUser;
   });
