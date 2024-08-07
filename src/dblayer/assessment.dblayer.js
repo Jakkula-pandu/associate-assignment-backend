@@ -30,6 +30,7 @@ exports.fetchAllAssessments = async (page,size,search,limit,offset,batch_id,asse
     let whereCondition = {
       [Op.and]: [],
     };
+    let questionDetails;
 if(batch_id){
      whereCondition[Op.and].push({
         batch_id: batch_id,
@@ -37,8 +38,9 @@ if(batch_id){
 }
 
 if(assessment_id){
-  let questionDetails = await questions.findAll({assessment_id:assessment_id})
+  questionDetails = await questions.findAll({assessment_id:assessment_id})
   console.log("questionDetails",questionDetails);
+
 }
     if (search && search.length >= constants.NUMBERS.THREE) {
       whereCondition[Op.and].push({
@@ -48,7 +50,7 @@ if(assessment_id){
         ],
       });
     } else if (search && search.length < constants.NUMBERS.THREE) {
-      return errorHandle({ status: constants.STATUS.FALSE }, res, message);
+        return { status: constants.STATUS.FALSE, message: constants.STRINGS.SEARCH_TERM_LENGTH };
     }
 
     const allAssessments = await Assessment.findAndCountAll({
@@ -68,7 +70,12 @@ if(assessment_id){
       offset: offset >= 0 ? offset : undefined, 
       order: [[constants.VARIABLES.CREATED_DATE, constants.VARIABLES.DESC]],
     });
+
+      if(questionDetails?.length>0){
+    console.log("qqqqqqqqqqq",questionDetails.length);
+       allAssessments.no_of_questions_available=questionDetails.length;
     console.log("allAssessments",allAssessments);
+  }
     return { status: constants.STATUS.TRUE, data: allAssessments };
   } catch (error) {
     return { status: constants.STATUS.FALSE, data: error };

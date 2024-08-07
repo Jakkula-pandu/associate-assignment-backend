@@ -67,7 +67,7 @@ exports.fetchAssessment = async (req, res) => {
 
     const result = await assessmentService.fetchAssessments( page, size, search,limit,offset,batch_id,assessment_id);
     console.log("result",result);
-     result.data.rows.forEach(result => {
+     result.data?.rows.forEach(result => {
     if (result.created_date) {
       // Add 5 hours and 30 minutes using moment
       result.created_date = moment(result.created_date)
@@ -77,7 +77,7 @@ exports.fetchAssessment = async (req, res) => {
     }
   });
     if (result.status === constants.STATUS.TRUE) {
-      const { count, rows } = result.data;
+      const { count, rows, no_of_questions_available} = result.data;
       if (rows.length > constants.NUMBERS.ZERO) {
         res.status(constants.STATUS_CODES.OK).json({
           status: constants.STATUS.TRUE,
@@ -85,7 +85,7 @@ exports.fetchAssessment = async (req, res) => {
           totalItems: count,
           totalPages: Math.ceil(count / size),
           currentPage: parseInt(page),
-          Assessments: rows,
+          Assessments: rows,no_of_questions_available
         });
         return;
       } else {
@@ -97,8 +97,12 @@ exports.fetchAssessment = async (req, res) => {
         return;
       }
     } else {
-      const message = constants.STRINGS.ERROR_FETCHING_USERS;
-      return errorHandle(result.data, res, message);
+     handleException(
+          constants.STATUS_CODES.LENGTH_REQUIRED,
+          result.message,
+          res
+        );
+        return;
     }
   } catch(e) {
     console.log("eeeee",e);

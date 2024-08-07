@@ -205,8 +205,12 @@ exports.fetchBatch = async (req, res) => {
         );
       }
     } else {
-      const message = constants.STRINGS.ERROR_FETCHING_USERS;
-      return errorHandle(result.data, res, message);
+     handleException(
+          constants.STATUS_CODES.LENGTH_REQUIRED,
+          result.message,
+          res
+        );
+        return;
     }
   } catch (e) {
     console.log("Exception occurred:", e);

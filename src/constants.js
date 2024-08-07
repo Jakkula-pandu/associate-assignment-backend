@@ -70,7 +70,8 @@ module.exports = {
     ADD_QUESTIONS:"questions added successfully",
     QUESTIONS_EXIST:"questions already exists",
     ASSESSMENT_SUBMIT:"assessment submitted successfully!",
-    ASSESSMENT_ALREADY_SUBMIT:"assessment already submitted"
+    ASSESSMENT_ALREADY_SUBMIT:"assessment already submitted",
+    SEARCH_TERM_LENGTH:'Search term must be at least 3 characters long'
   },
   VARIABLES: {
     ROLE: "role",

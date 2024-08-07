@@ -34,8 +34,9 @@ exports.fetchAllUsers = async (role_id, limit, offset, search, user_id) => {
           { empid: { [Op.iLike]: `%${search}%` } },
         ],
       });
-    } else if (search && search.length < constants.NUMBERS.THREE) {
-      return errorHandle({ status: constants.STATUS.FALSE }, res, message);
+    } 
+    else if (search && search.length < constants.NUMBERS.THREE) {
+          return { status: constants.STATUS.FALSE, message: constants.STRINGS.SEARCH_TERM_LENGTH };
     }
 
     console.log("whereCondition", whereCondition);

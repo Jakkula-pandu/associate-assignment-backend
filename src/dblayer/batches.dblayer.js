@@ -32,7 +32,7 @@ exports.fetchAllBatches = async (page, size, search, user_id, limit, offset) => 
         ],
       });
     } else if (search && search.length < constants.NUMBERS.THREE) {
-      return { status: constants.STATUS.FALSE, data: constants.STRINGS.INVALID_SEARCH_TERM };
+       return { status: constants.STATUS.FALSE, message: constants.STRINGS.SEARCH_TERM_LENGTH };
     }
     const allBatches = await Batch.findAndCountAll({
       where: whereCondition,

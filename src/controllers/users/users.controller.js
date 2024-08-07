@@ -73,7 +73,7 @@ exports.fetchUsers = async (req, res) => {
  
     const result = await userService.fetchAllUsers(role_id, limit, offset, search,user_id);
     console.log("result",result);
-     result.data.rows.forEach(result => {
+     result.data?.rows.forEach(result => {
     if (result.created_date) {
       // Add 5 hours and 30 minutes using moment
       result.created_date = moment(result.created_date)
@@ -106,8 +106,12 @@ exports.fetchUsers = async (req, res) => {
         return;
       }
     } else {
-      const message = constants.STRINGS.ERROR_FETCHING_USERS;
-      return errorHandle(result.data, res, message);
+       handleException(
+          constants.STATUS_CODES.LENGTH_REQUIRED,
+          result.message,
+          res
+        );
+        return;
     }
   } catch (e) {
     console.log("eeeeeeeeee",e);
