@@ -1,9 +1,61 @@
 const Schema = require("./questions.validation");
 const { handleException, errorHandle, exception } = require("../../utils");
-const { User ,Submission, questions} = require('../../models'); 
+const { User ,Submission, questions,Assessment} = require('../../models'); 
 const moment = require('moment-timezone');
 const questionService = require('./questions.service');
 const constants = require('../../constants');
+
+// exports.addQuestions = async (req, res) => {
+//   try {
+//     const assessment_id = req.query.assessment_id;
+//     const requestBody = req.body;
+
+//     if (!Array.isArray(requestBody)) {
+//       return res.status(constants.STATUS_CODES.BAD_REQUEST).json({
+//         status: constants.STATUS.FALSE,
+//         message: "Request body must be an array of questions.",
+//       });
+//     }
+
+//     const roleId = req.header("role_id");
+
+//     const questionsToInsert = requestBody.map(question => ({
+//       ...question,
+//       created_by: roleId,
+//       assessment_id: assessment_id,
+//     }));
+
+//     console.log("questionsToInsert", questionsToInsert);
+
+//     const insertResults = await Promise.all(questionsToInsert.map(question => questionService.addQuestion(question)));
+//     const duplicates = insertResults.filter(result => result.data === constants.STRINGS.QUESTIONS_EXIST);
+//     const allSuccessful = insertResults.every(result => result.status === constants.STATUS.TRUE);
+
+//     if (duplicates.length > 0) {
+//       res.status(constants.STATUS_CODES.CONFLICT).json({
+//         status: constants.STATUS.FALSE,
+//         statusCode: constants.STATUS_CODES.CONFLICT,
+//         message: `${duplicates.length} questions already exist.`,
+//       });
+//     } else if (allSuccessful) {
+//       res.status(constants.STATUS_CODES.OK).json({
+//         status: constants.STATUS.TRUE,
+//         statusCode: constants.STATUS_CODES.OK,
+//         message: constants.STRINGS.ADD_QUESTIONS,
+//       });
+//     } else {
+//       res.status(constants.STATUS_CODES.CONFLICT).json({
+//         status: constants.STATUS.FALSE,
+//         statusCode: constants.STATUS_CODES.CONFLICT,
+//         message: constants.STRINGS.QUESTIONS_EXIST,
+//       });
+//     }
+//   } catch (e) {
+//     console.log("Error:", e);
+//     exception(res);
+//   }
+// };
+
 
 exports.addQuestions = async (req, res) => {
   try {
@@ -24,6 +76,29 @@ exports.addQuestions = async (req, res) => {
       created_by: roleId,
       assessment_id: assessment_id,
     }));
+
+
+    const assessment = await Assessment.findOne({ where: { assessment_id: assessment_id } });
+    if (!assessment) {
+      return res.status(constants.STATUS_CODES.NOT_FOUND).json({
+        status: constants.STATUS.FALSE,
+        message: "Assessment not found.",
+      });
+    }
+    console.log("assessment",assessment);
+
+    const currentQuestionCount = await questions.count({ where: { assessment_id: assessment_id } });
+    const newQuestionsCount = questionsToInsert.length;
+
+  
+    const MAX_QUESTIONS = assessment.no_of_questions;
+
+    if (currentQuestionCount + newQuestionsCount > MAX_QUESTIONS) {
+      return res.status(constants.STATUS_CODES.BAD_REQUEST).json({
+        status: constants.STATUS.FALSE,
+        message: `Cannot add questions. Maximum limit of ${MAX_QUESTIONS} questions exceeded.`,
+      });
+    }
 
     console.log("questionsToInsert", questionsToInsert);
 
@@ -55,6 +130,7 @@ exports.addQuestions = async (req, res) => {
     exception(res);
   }
 };
+
 
 exports.validateRequestBody = async (req, res, next) => {
   let schema = Schema.validateUserReqBody();

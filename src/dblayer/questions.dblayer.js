@@ -64,7 +64,6 @@ exports.insertQuestion = async (data) => {
       { where: { assessment_id: data.assessment_id } } 
     );
     let question = await questions.create({
-      nof_of_questions:data.nof_of_questions,
       question_text: data.question_text,
       question_type: data.question_type,
       options: data.options,

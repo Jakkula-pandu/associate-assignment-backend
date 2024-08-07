@@ -22,6 +22,10 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING(70),
         allowNull: true,
       },
+          no_of_questions:{
+         type: DataTypes.INTEGER,
+        allowNull: true,
+      },
        is_questions:{
          type:DataTypes.BOOLEAN,
         allowNull:true

@@ -19,10 +19,6 @@ module.exports = (sequelize) => {
         autoIncrement: true,
         allowNull: false,
       },
-      no_of_questions:{
-         type: DataTypes.INTEGER,
-        allowNull: true,
-      },
       question_text: {
         type: DataTypes.STRING(270),
         allowNull: true,
