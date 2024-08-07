@@ -13,6 +13,7 @@ exports.insertAssessment = async (data) => {
         }
         let assessment = await Assessment.create({
             assessment_name: data.assessment_name,
+            no_of_questions:data.no_of_questions,
             batch_id: data.batch_id,
             created_by: data.role_id,
             is_questions:false

@@ -257,8 +257,7 @@ exports.fetchUserAnswers = async (req, res) => {
     const userId = req.query.user_id;
     const batchId = req.query.batch_id;
     const assessmentId = req.query.assessment_id;
-let userAnswers = await questionService.userAnswers(userId,batchId,assessmentId);
-console.log("userAnswers",userAnswers);
+    let userAnswers = await questionService.userAnswers(userId,batchId,assessmentId);
     if (userAnswers.status === constants.STATUS.TRUE) {
        res.status(constants.STATUS_CODES.OK).json({
           status: constants.STATUS.TRUE,
