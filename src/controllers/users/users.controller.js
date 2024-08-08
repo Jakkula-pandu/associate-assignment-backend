@@ -50,8 +50,8 @@ exports.fetchUsers = async (req, res) => {
         return;
       } else {
         handleException(
-          constants.STATUS_CODES.DOES_NOT_EXIST,
-          constants.MESSAGES[constants.STATUS_CODES.DOES_NOT_EXIST],
+            constants.STATUS_CODES.DOES_NOT_EXIST,
+          constants.STRINGS.NO_RECORDS,
           res
         );
         return;
