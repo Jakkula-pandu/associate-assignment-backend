@@ -42,16 +42,17 @@ if(assessment_id){
   console.log("questionDetails",questionDetails);
 
 }
-    if (search && search.length >= constants.NUMBERS.THREE) {
+    if (search && search.length >= constants.NUMBERS.ZERO) {
       whereCondition[Op.and].push({
         [Op.or]: [
           { assessment_name: { [Op.iLike]: `%${search}%` } },
  
         ],
       });
-    } else if (search && search.length < constants.NUMBERS.THREE) {
-        return { status: constants.STATUS.FALSE, message: constants.STRINGS.SEARCH_TERM_LENGTH };
     }
+    //  else if (search && search.length < constants.NUMBERS.THREE) {
+    //     return { status: constants.STATUS.FALSE, message: constants.STRINGS.SEARCH_TERM_LENGTH };
+    // }
 
     const allAssessments = await Assessment.findAndCountAll({
       where: whereCondition,

@@ -26,7 +26,7 @@ exports.fetchAllUsers = async (role_id, limit, offset, search, user_id) => {
       });
     }
 
-    if (search && search.length >= constants.NUMBERS.THREE) {
+    if (search && search.length >= constants.NUMBERS.ZERO) {
       whereCondition[Op.and].push({
         [Op.or]: [
           { username: { [Op.iLike]: `%${search}%` } },
@@ -35,9 +35,9 @@ exports.fetchAllUsers = async (role_id, limit, offset, search, user_id) => {
         ],
       });
     } 
-    else if (search && search.length < constants.NUMBERS.THREE) {
-          return { status: constants.STATUS.FALSE, message: constants.STRINGS.SEARCH_TERM_LENGTH };
-    }
+    // else if (search && search.length < constants.NUMBERS.THREE) {
+    //       return { status: constants.STATUS.FALSE, message: constants.STRINGS.SEARCH_TERM_LENGTH };
+    // }
 
     console.log("whereCondition", whereCondition);
     const allUsers = await User.findAndCountAll({

@@ -25,15 +25,16 @@ exports.insertBatch = async (data) => {
 exports.fetchAllBatches = async (page, size, search, user_id, limit, offset) => {
   try {
     let whereCondition = { [Op.and]: [] };
-    if (search && search.length >= constants.NUMBERS.THREE) {
+    if (search && search.length >= constants.NUMBERS.ZERO) {
       whereCondition[Op.and].push({
         [Op.or]: [
           { batch_name: { [Op.iLike]: `%${search}%` } },
         ],
       });
-    } else if (search && search.length < constants.NUMBERS.THREE) {
-       return { status: constants.STATUS.FALSE, message: constants.STRINGS.SEARCH_TERM_LENGTH };
-    }
+    } 
+    // else if (search && search.length < constants.NUMBERS.THREE) {
+    //    return { status: constants.STATUS.FALSE, message: constants.STRINGS.SEARCH_TERM_LENGTH };
+    // }
     const allBatches = await Batch.findAndCountAll({
       where: whereCondition,
       limit: limit > 0 ? limit : undefined,

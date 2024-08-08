@@ -27,7 +27,7 @@ exports.validateUserReqBody = () => {
                 .messages({ "any.required": 'userAnswer is required' }),
         })
     ).min(1).messages({
-        'array.min': 'The array must contain at least one question object'
+        'array.min': 'Atleast one question is required'
     });
 };
 

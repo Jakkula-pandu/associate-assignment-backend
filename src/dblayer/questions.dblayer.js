@@ -208,12 +208,11 @@ exports.fetchAllUserAnswers = async (userId, batchId, assessmentId) => {
             question_type: questionDetails.question_type,
             user_answer: {
               question_id: input.question_id,
-              answer: input.answer, // Assuming input contains the user's answer
+              answer: input.answer, 
             },
             correct_answers: questionDetails.correct_answers,
           };
 
-          // Include options only if the question type is multiple_choice
           if (questionDetails.question_type === 'multiple_choice') {
             result.options = questionDetails.options
               ? questionDetails.options.map(option => ({
@@ -223,7 +222,7 @@ exports.fetchAllUserAnswers = async (userId, batchId, assessmentId) => {
               : [];
           }
 
-          response.push(result); // Add the result to the response array
+          response.push(result); 
         } else {
           console.log(`Question with id ${input.question_id} not found`);
         }
@@ -241,6 +240,6 @@ response,
  
   } catch (error) {
     console.log("Error fetching user answers", error);
-    return { status: false, statusCode: 500, message: error }; // Return an error structure
+    return { status: false, statusCode: 500, message: error }; 
   }
 };
