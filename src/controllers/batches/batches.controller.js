@@ -159,8 +159,8 @@ const getUserIdsFromNames = async (userNames) => {
 
 exports.fetchBatch = async (req, res) => {
   try {
-    const { size = process.env.page_Size || constants.NUMBERS.TEN, search, user_id } = req.query;
-    const page = req.query.page || constants.NUMBERS.ONE;
+    const { size= process.env.page_Size || constants.NUMBERS.TEN  , search, user_id,page } = req.query;
+   
     let limit, offset;
 
     if (page && parseInt(page) > 0) {
@@ -175,6 +175,8 @@ exports.fetchBatch = async (req, res) => {
     console.log("Fetched batches result:", result);
     
     if (result.status === constants.STATUS.TRUE) {
+      console.log("rrrrr",result);
+      
       const { count, rows } = result.data || { count: 0, rows: [] }; 
       if (rows.length > constants.NUMBERS.ZERO) {
         rows.forEach(result => {
@@ -185,6 +187,8 @@ exports.fetchBatch = async (req, res) => {
               .format('YYYY-MM-DD HH:mm:ss');
           }
         });
+        console.log("rowsssss",rows.length);
+        
         res.status(constants.STATUS_CODES.OK).json({
           status: constants.STATUS.TRUE,
           code: constants.STATUS_CODES.OK,

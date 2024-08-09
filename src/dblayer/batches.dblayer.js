@@ -24,6 +24,8 @@ exports.insertBatch = async (data) => {
 
 exports.fetchAllBatches = async (page, size, search, user_id, limit, offset) => {
   try {
+    console.log("limit,offset",limit,offset);
+    
     let whereCondition = { [Op.and]: [] };
     if (search && search.length >= constants.NUMBERS.ZERO) {
       whereCondition[Op.and].push({
@@ -41,7 +43,11 @@ exports.fetchAllBatches = async (page, size, search, user_id, limit, offset) => 
       offset: offset >= 0 ? offset : undefined,
       order: [[constants.VARIABLES.CREATED_DATE, constants.VARIABLES.DESC]],
     });
+    console.log("allBatches",allBatches.rows.length);
+    
     let filteredBatches = allBatches.rows;
+    console.log("ffffffffff",filteredBatches.length);
+    
   for (let batch of filteredBatches) {
       const userIds = batch.users || []; 
       const users = await User.findAll({
@@ -64,6 +70,8 @@ exports.fetchAllBatches = async (page, size, search, user_id, limit, offset) => 
     return hasUser;
   });
 }
+console.log("filteredBatches.length",filteredBatches.length);
+
     return { status: constants.STATUS.TRUE, data: { count: filteredBatches.length, rows: filteredBatches } };
   } catch (error) {
     console.log("Error fetching batches:", error);
