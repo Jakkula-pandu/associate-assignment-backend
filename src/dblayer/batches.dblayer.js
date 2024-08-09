@@ -34,6 +34,7 @@ exports.fetchAllBatches = async (page, size, search, user_id, limit, offset) => 
         ],
       });
     } 
+    const totalBatches = await Batch.count({ where: whereCondition });
     // else if (search && search.length < constants.NUMBERS.THREE) {
     //    return { status: constants.STATUS.FALSE, message: constants.STRINGS.SEARCH_TERM_LENGTH };
     // }
@@ -72,7 +73,7 @@ exports.fetchAllBatches = async (page, size, search, user_id, limit, offset) => 
 }
 console.log("filteredBatches.length",filteredBatches.length);
 
-    return { status: constants.STATUS.TRUE, data: { count: filteredBatches.length, rows: filteredBatches } };
+    return { status: constants.STATUS.TRUE, data: { count: totalBatches, rows: filteredBatches } };
   } catch (error) {
     console.log("Error fetching batches:", error);
     return { status: constants.STATUS.FALSE, data: error };
